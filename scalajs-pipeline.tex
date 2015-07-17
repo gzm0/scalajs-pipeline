@@ -1,0 +1,109 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+
+%\usepackage{alltt}
+%\usepackage{xcolor}
+%\usepackage[overlay,absolute]{textpos}
+%\usepackage[normalem]{ulem}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,petri,topaths}
+\usepackage{tkz-berge}
+
+%%%% Colors for source highlighting
+%%\definecolor{scKW}  {HTML}{AA37F2}
+%%\definecolor{scFct} {HTML}{1010FF}
+%%\definecolor{scType}{HTML}{228B22}
+%%\definecolor{scVar} {HTML}{A45936}
+%%\definecolor{scComm}{HTML}{B32525}
+%%
+%%%% Define _s_cala commands
+%%\newcommand{\sK}[1]{{\color{scKW} #1}}
+%%\newcommand{\sF}[1]{{\color{scFct} #1}}
+%%\newcommand{\sV}[1]{{\color{scVar} #1}}
+%%\newcommand{\sT}[1]{{\color{scType} #1}}
+%%\newcommand{\sC}[1]{{\color{scComm} #1}}
+%%\newcommand{\sH}[1]{{\color{white} #1}}
+%%\newcommand{\sN}[1]{{\color{black} #1}}
+%%\newcommand{\sS}{\vspace{0.8mm}}
+
+%% Define other commands
+%%\newcommand<>{\strike}[1]{\alt#2{\sout{#1}}{#1}}
+
+%%% File icons
+\newcommand{\fileLogoWidth}{1.5cm}
+\newcommand{\scalaFile}{\includegraphics[width=\fileLogoWidth]{icons/files/scala}}
+\newcommand{\scalaFiles}{\includegraphics[width=\fileLogoWidth]{icons/files/scala_}}
+\newcommand{\jsFile}{\includegraphics[width=\fileLogoWidth]{icons/files/js}}
+\newcommand{\classFiles}{\includegraphics[width=\fileLogoWidth]{icons/files/class_}}
+
+%%% Component icons
+\newcommand{\scalajsCompiler}{\includegraphics[width=2cm]{icons/components/scalajs}}
+\newcommand{\scalaCompiler}{\includegraphics[width=1cm]{icons/components/scalac}}
+\newcommand{\javaVM}{\includegraphics[width=2cm]{icons/components/jvm}}
+
+\setbeamercovered{transparent}
+\setbeamertemplate{navigation symbols}
+
+% Frame number on page
+\setbeamertemplate{footline}{\makebox[0.98\paperwidth][r]{\large \raisebox{1.2ex}{\insertframenumber}}}
+
+\newcommand{\emptyFile}{\includegraphics[width=1.5cm]{empty-icon}}
+
+\title{The Scala.js Compilation Pipeline}
+\author{Tobias Schlatter}
+\date{August 15, 2015}
+
+\begin{document}
+
+\begin{frame}
+  \begin{center}
+    \visible<2>{\Large The Scala.js Compilation Pipeline}
+    
+    \vspace{1cm}
+
+    \begin{tikzpicture}
+      \node (scala) at (0,0) {\scalaFiles};
+      \node (js) at (8,0) {\jsFile};
+
+      \draw[->,thick] (scala) -- (js)
+      node[midway] {\scalajsCompiler};
+    \end{tikzpicture}
+
+    \vspace{1cm}
+
+    \visible<2>{\Large Tobias Schlatter -- \texttt{@gzm0}}
+  \end{center}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Scala JVM}
+  
+  \begin{center}
+    \begin{tikzpicture}
+      \node (scala1) at (0,5) {\scalaFiles};
+      \node (class1) at (0,0) {\classFiles};
+
+      \visible<2->{\node (scala2) at (6,5) {\scalaFiles};}
+      \node<2-> (class2) at (6,0) {\classFiles};
+
+      \draw[->,thick] (scala1) -- (class1)
+      node[midway] {\scalaCompiler};
+
+      \draw<2->[->,thick] (scala2) -- (class2)
+      node[midway] (scalac2) {\scalaCompiler};
+
+      \node (jvm) at (3,0) {\javaVM};
+
+      \draw[->,thick] (class1) -- (jvm);
+      \draw<2->[->,thick] (class2) -- (jvm);
+
+      \draw<3->[->,thick] (class1) -- (scalac2);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\end{document}
