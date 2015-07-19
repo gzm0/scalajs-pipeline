@@ -32,16 +32,19 @@
 %%\newcommand<>{\strike}[1]{\alt#2{\sout{#1}}{#1}}
 
 %%% File icons
-\newcommand{\fileLogoWidth}{1.5cm}
-\newcommand{\scalaFile}{\includegraphics[width=\fileLogoWidth]{icons/files/scala}}
-\newcommand{\scalaFiles}{\includegraphics[width=\fileLogoWidth]{icons/files/scala_}}
-\newcommand{\jsFile}{\includegraphics[width=\fileLogoWidth]{icons/files/js}}
-\newcommand{\classFiles}{\includegraphics[width=\fileLogoWidth]{icons/files/class_}}
+\newcommand{\scalaFile}{\includegraphics{icons/files/scala}}
+\newcommand{\scalaFiles}[1][1]{\includegraphics[scale=#1]{icons/files/scala_}}
+\newcommand{\jsFile}[1][1]{\includegraphics[scale=#1]{icons/files/js}}
+\newcommand{\classFiles}{\includegraphics{icons/files/class_}}
+\newcommand{\sjsirFiles}{\includegraphics{icons/files/sjsir_}}
+
+\newcommand{\packageIcon}{\includegraphics{icons/files/package}}
 
 %%% Component icons
-\newcommand{\scalajsCompiler}{\includegraphics[width=2cm]{icons/components/scalajs}}
-\newcommand{\scalaCompiler}{\includegraphics[width=1cm]{icons/components/scalac}}
-\newcommand{\javaVM}{\includegraphics[width=2cm]{icons/components/jvm}}
+\newcommand{\scalajsc}{\includegraphics{icons/components/scalajsc}}
+\newcommand{\scalajsld}[1][1]{\includegraphics[scale=#1]{icons/components/scalajsld}}
+\newcommand{\scalac}{\includegraphics{icons/components/scalac}}
+\newcommand{\javaVM}{\includegraphics{icons/components/jvm}}
 
 \setbeamercovered{transparent}
 \setbeamertemplate{navigation symbols}
@@ -64,11 +67,12 @@
     \vspace{1cm}
 
     \begin{tikzpicture}
-      \node (scala) at (0,0) {\scalaFiles};
-      \node (js) at (8,0) {\jsFile};
+      \node (scala) at (0,0) {\scalaFiles[1.2]};
+      \node (js) at (8,0) {\jsFile[1.2]};
+      \node (scalajs) at (4,0) {\scalajsld[1.5]};
 
-      \draw[->,thick] (scala) -- (js)
-      node[midway] {\scalajsCompiler};
+      \draw[->,thick] (scala) -- (scalajs);
+      \draw[->,thick] (scalajs) -- (js);
     \end{tikzpicture}
 
     \vspace{1cm}
@@ -77,33 +81,114 @@
   \end{center}
 \end{frame}
 
-\section{Introduction}
+\section*{Overview}
 
 \begin{frame}
-  \frametitle{Scala JVM}
+  \frametitle{Contents}
+
+  \tableofcontents
+\end{frame}
+
+\section{A View From Above}
+\subsection{Scala JVM Pipeline}
+
+\begin{frame}
+  \frametitle{Scala JVM Pipeline}
   
   \begin{center}
     \begin{tikzpicture}
-      \node (scala1) at (0,5) {\scalaFiles};
-      \node (class1) at (0,0) {\classFiles};
+      \useasboundingbox (0,-1) rectangle (10,5);
 
-      \visible<2->{\node (scala2) at (6,5) {\scalaFiles};}
-      \node<2-> (class2) at (6,0) {\classFiles};
+      % Top pipeline
+      \node (scala1) at (0,4) {\scalaFiles};
+      \node (scalac1) at (2.5,4) {\scalac};
+      \node (class1) at (5.5,4) {\classFiles};
+      \node<2-> at (5,4.6) {\packageIcon};
 
-      \draw[->,thick] (scala1) -- (class1)
-      node[midway] {\scalaCompiler};
+      \draw[->,thick] (scala1) -- (scalac1);
+      \draw[->,thick] (scalac1) -- (class1);
 
-      \draw<2->[->,thick] (scala2) -- (class2)
-      node[midway] (scalac2) {\scalaCompiler};
+      % Bottom pipeline
+      \node<3-> (scala2) at (0,0) {\scalaFiles};
+      \node<3-> (scalac2) at (2.5,0) {\scalac};
+      \node<3-> (class2) at (5.5,0) {\classFiles};
+      \node<3-> at (5, .6) {\packageIcon};
 
-      \node (jvm) at (3,0) {\javaVM};
+      \draw<3->[->,thick] (scala2) -- (scalac2);
+      \draw<3->[->,thick] (scalac2) -- (class2);
+
+      % JVM and inputs
+      \node (jvm) at (9,2) {\javaVM};
 
       \draw[->,thick] (class1) -- (jvm);
-      \draw<2->[->,thick] (class2) -- (jvm);
+      \draw<3->[->,thick] (class2) -- (jvm);
 
-      \draw<3->[->,thick] (class1) -- (scalac2);
+      % Compilation symbols
+      \draw<4->[->,thick] (class1) -- (scalac2);
     \end{tikzpicture}
   \end{center}
+\end{frame}
+
+\subsection{Scala.js Pipeline}
+\begin{frame}
+  \frametitle{Scala.js Pipeline}
+  
+  \begin{center}
+    \begin{tikzpicture}
+      \useasboundingbox (0,-1) rectangle (10,5);
+      
+      % Top pipeline
+      \node (scala1) at (0,4) {\scalaFiles};
+      \node (scalajsc1) at (2.5,4) {\scalajsc};
+      \node<1> (sjsir1) at (5.5,4) {\sjsirFiles};
+      \node<2-> (sjsir1) at (5.5,4.7) {\sjsirFiles};
+      \node<2-> (class1) at (5.5,3.3) {\classFiles};
+      \node<4-> at (5,4) {\packageIcon};
+
+      \draw[->,thick] (scala1) -- (scalajsc1);
+      \draw[->,thick] (scalajsc1) -- (class1);
+      \draw[->,thick] (scalajsc1) -- (sjsir1);
+
+      % Bottom pipeline
+      \node (scala2) at (0,0) {\scalaFiles};
+      \node (scalajsc2) at (2.5,0) {\scalajsc};
+      \node<1> (sjsir2) at (5.5,0) {\sjsirFiles};
+      \node<2-> (sjsir2) at (5.5,.7) {\sjsirFiles};
+      \node<2-> (class2) at (5.5,-.7) {\classFiles};
+      \node<4-> at (5,0) {\packageIcon};
+
+      \draw[->,thick] (scala2) -- (scalajsc2);
+      \draw[->,thick] (scalajsc2) -- (class2);
+      \draw[->,thick] (scalajsc2) -- (sjsir2);
+
+      % Linker and JS file
+      \node (scalajsld) at (9,3.5) {\scalajsld};
+      \node (js) at (9,0) {\jsFile};
+
+      \draw[->,thick] (sjsir1) -- (scalajsld);
+      \draw[->,thick] (sjsir2) -- (scalajsld);
+
+      \draw[->,thick] (scalajsld) -- (js);
+
+      % Compilation symbols
+      \draw<3->[->,thick] (class1) -- (scalajsc2);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\section{Scala.js IR}
+
+\begin{frame}
+\end{frame}
+
+\section{Scala.js Compiler}
+
+\begin{frame}
+\end{frame}
+
+\section{Scala.js Linker}
+
+\begin{frame}
 \end{frame}
 
 \end{document}
