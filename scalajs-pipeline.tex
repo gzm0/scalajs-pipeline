@@ -2,7 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 
-%\usepackage{alltt}
+\usepackage{alltt}
 %\usepackage{xcolor}
 %\usepackage[overlay,absolute]{textpos}
 %\usepackage[normalem]{ulem}
@@ -63,7 +63,7 @@
 \begin{frame}
   \begin{center}
     \visible<2>{\Large The Scala.js Compilation Pipeline}
-    
+
     \vspace{1cm}
 
     \begin{tikzpicture}
@@ -94,7 +94,7 @@
 
 \begin{frame}
   \frametitle{Scala JVM Pipeline}
-  
+
   \begin{center}
     \begin{tikzpicture}
       \useasboundingbox (0,-1) rectangle (10,5);
@@ -132,11 +132,11 @@
 \subsection{Scala.js Pipeline}
 \begin{frame}
   \frametitle{Scala.js Pipeline}
-  
+
   \begin{center}
     \begin{tikzpicture}
       \useasboundingbox (0,-1) rectangle (10,5);
-      
+
       % Top pipeline
       \node (scala1) at (0,4) {\scalaFiles};
       \node (scalajsc1) at (2.5,4) {\scalajsc};
@@ -179,16 +179,114 @@
 \section{Scala.js IR}
 
 \begin{frame}
+  \frametitle{Scala.js IR}
+  \framesubtitle{The copied part}
+
+  \begin{block}<+->{Classes}
+    \begin{itemize}
+    \item Single class, multi interface inheritance
+    \item No nested classes
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<+->{Interfaces}
+    \begin{itemize}
+    \item No implementations / default methods (yet)
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<+->{Types}
+    \begin{itemize}
+    \item Primitive types (\texttt{int}, \texttt{long}, \ldots)
+    \item Class types (\texttt{my.package.Foo}, \ldots)
+    \item Array types (\texttt{int[]}, \texttt{Foo[]}, \ldots)
+    \item No generics
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scala.js IR}
+  \framesubtitle{The different part}
+
+  \begin{block}<+->{Modules (aka Objects)}
+  \end{block}
+
+  \begin{block}<+->{Types}
+    \begin{itemize}
+    \item String type
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<+->{Operations}
+    \begin{itemize}
+    \item AST form
+    \item Statements in expression position
+    \item JavaScript operations
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 \section{Scala.js Compiler}
 
 \begin{frame}
+  \frametitle{Phases of the Scala.js Compiler}
+
+  \begin{columns}[t]
+    \column{.5\textwidth}
+    \begin{alltt}
+      parser\\
+      namer\\
+      packageobjects\\
+      typer\\
+      \alert<2>{jsinterop\\}
+      patmat\\
+      superaccessors\\
+      extmethods\\
+      pickler\\
+      refchecks\\
+      uncurry\\
+      tailcalls\\
+      specialize\\
+    \end{alltt}
+
+    \column{.5\textwidth}
+    \begin{alltt}
+      explicitouter\\
+      erasure\\
+      posterasure\\
+      lazyvals\\
+      lambdalift\\
+      constructors\\
+      flatten\\
+      mixin\\
+      \alert<2>{jscode\\}
+      cleanup\\
+      delambdafy\\
+      icode\\
+      jvm\\
+      terminal
+    \end{alltt}
+  \end{columns}
 \end{frame}
 
 \section{Scala.js Linker}
 
 \begin{frame}
+\end{frame}
+
+\section*{Things I Shamelessly Omitted}
+
+\begin{frame}
+  \frametitle{Things I Shamelessly Omitted}
+
+  \begin{itemize}
+  \item Hijacked Classes
+  \item \texttt{scala.Enumeration}
+  \item Instance tests for raw JavaScript types
+  \item IR Helper types (Undefined, Null, Nothing, NoType, Record-types)
+  \item IR Labeled Blocks
+  \end{itemize}
 \end{frame}
 
 \end{document}
