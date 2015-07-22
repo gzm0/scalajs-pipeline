@@ -9,7 +9,6 @@
 %\usepackage[normalem]{ulem}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows,petri,topaths}
 \usepackage{tkz-berge}
 
 %%%% Colors for source highlighting
@@ -97,7 +96,7 @@
   \frametitle{Scala JVM Pipeline}
 
   \begin{center}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[->,thick]
       \useasboundingbox (0,-1) rectangle (10,5);
 
       % Top pipeline
@@ -106,8 +105,8 @@
       \node (class1) at (5.5,4) {\classFiles};
       \node<2-> at (5,4.6) {\packageIcon};
 
-      \draw[->,thick] (scala1) -- (scalac1);
-      \draw[->,thick] (scalac1) -- (class1);
+      \draw (scala1) -- (scalac1);
+      \draw (scalac1) -- (class1);
 
       % Bottom pipeline
       \node<3-> (scala2) at (0,0) {\scalaFiles};
@@ -115,17 +114,17 @@
       \node<3-> (class2) at (5.5,0) {\classFiles};
       \node<3-> at (5, .6) {\packageIcon};
 
-      \draw<3->[->,thick] (scala2) -- (scalac2);
-      \draw<3->[->,thick] (scalac2) -- (class2);
+      \draw<3-> (scala2) -- (scalac2);
+      \draw<3-> (scalac2) -- (class2);
 
       % JVM and inputs
       \node (jvm) at (9,2) {\javaVM};
 
-      \draw[->,thick] (class1) -- (jvm);
-      \draw<3->[->,thick] (class2) -- (jvm);
+      \draw (class1) -- (jvm);
+      \draw<3-> (class2) -- (jvm);
 
       % Compilation symbols
-      \draw<4->[->,thick] (class1) -- (scalac2);
+      \draw<4-> (class1) -- (scalac2);
     \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -135,7 +134,7 @@
   \frametitle{Scala.js Pipeline}
 
   \begin{center}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[->,thick]
       \useasboundingbox (0,-1) rectangle (10,5);
 
       % Top pipeline
@@ -146,9 +145,9 @@
       \node<2-> (class1) at (5.5,3.3) {\classFiles};
       \node<4-> at (5,4) {\packageIcon};
 
-      \draw[->,thick] (scala1) -- (scalajsc1);
-      \draw[->,thick] (scalajsc1) -- (class1);
-      \draw[->,thick] (scalajsc1) -- (sjsir1);
+      \draw (scala1) -- (scalajsc1);
+      \draw (scalajsc1) -- (class1);
+      \draw (scalajsc1) -- (sjsir1);
 
       % Bottom pipeline
       \node (scala2) at (0,0) {\scalaFiles};
@@ -158,21 +157,21 @@
       \node<2-> (class2) at (5.5,-.7) {\classFiles};
       \node<4-> at (5,0) {\packageIcon};
 
-      \draw[->,thick] (scala2) -- (scalajsc2);
-      \draw[->,thick] (scalajsc2) -- (class2);
-      \draw[->,thick] (scalajsc2) -- (sjsir2);
+      \draw (scala2) -- (scalajsc2);
+      \draw (scalajsc2) -- (class2);
+      \draw (scalajsc2) -- (sjsir2);
 
       % Linker and JS file
       \node (scalajsld) at (9,3) {\scalajsld};
       \node (js) at (9,.5) {\jsFile};
 
-      \draw[->,thick] (sjsir1) -- (scalajsld);
-      \draw[->,thick] (sjsir2) -- (scalajsld);
+      \draw (sjsir1) -- (scalajsld);
+      \draw (sjsir2) -- (scalajsld);
 
-      \draw[->,thick] (scalajsld) -- (js);
+      \draw (scalajsld) -- (js);
 
       % Compilation symbols
-      \draw<3->[->,thick] (class1) -- (scalajsc2);
+      \draw<3-> (class1) -- (scalajsc2);
     \end{tikzpicture}
   \end{center}
 \end{frame}
