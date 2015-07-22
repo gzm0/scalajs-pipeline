@@ -271,6 +271,45 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Phases of the Scala.js Compiler}
+  \framesubtitle{Simplified}
+
+  \begin{center}
+    \begin{tikzpicture}[->,thick,
+      phase/.style={
+        draw,
+        rectangle, rounded corners = 9pt,
+        text width=2cm,
+        text depth=.9ex,
+        text height=.9em,
+        text centered}
+      ]
+
+      \node (scala) at (1,4) {\scalaFiles};
+
+      \node[phase] (frontend) at (4, 4) {\texttt{typer}};
+
+      \node[phase] (jsinterop) at (4, 2.5) {\texttt{jsinterop}};
+      \node[phase] (scalac) at (4, 1) {\texttt{scalac}};
+
+      \node[phase] (jscode) at (1, 0) {\texttt{jscode}};
+      \node[phase] (jvm) at (7, 0) {\texttt{jvm}};
+
+      \node (sjsir) at (1, -1.5) {\sjsirFiles};
+      \node (class) at (7, -1.5) {\classFiles};
+
+      \draw (scala) -- (frontend);
+      \draw (frontend) -- (jsinterop);
+      \draw (jsinterop) -- (scalac);
+      \draw (scalac) -- (jscode);
+      \draw (scalac) -- (jvm);
+      \draw (jscode) -- (sjsir);
+      \draw (jvm) -- (class);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
   \frametitle{Scala.js Compiler -- Duties}
 
   \begin{block}<-2>{JVM like parts \only<2->{\checkmark}}
