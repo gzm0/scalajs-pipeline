@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{alltt}
+\usepackage{amssymb}
 %\usepackage{xcolor}
 %\usepackage[overlay,absolute]{textpos}
 %\usepackage[normalem]{ulem}
@@ -270,6 +271,29 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Scala.js Compiler -- Duties}
+
+  \begin{block}<-2>{JVM like parts \only<2->{\checkmark}}
+    \begin{itemize}
+    \item Classes
+    \item Interfaces
+    \item Types
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<-7>{Parts different from the JVM}
+    \begin{itemize}
+    \item<-6> Modules (aka objects) \only<4->{\checkmark}
+    \item String type
+    \item<-6> AST form \only<5->{\checkmark}
+    \item<-6> Statements in expression position \only<6->{\checkmark}
+    \item JavaScript operations
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
 \section{Scala.js Linker}
 
 \begin{frame}
@@ -286,6 +310,7 @@
   \item Instance tests for raw JavaScript types
   \item IR Helper types (Undefined, Null, Nothing, NoType, Record-types)
   \item IR Labeled Blocks
+  \item Reflective Calls
   \end{itemize}
 \end{frame}
 
