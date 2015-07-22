@@ -66,13 +66,13 @@
 
     \vspace{1cm}
 
-    \begin{tikzpicture}
+    \begin{tikzpicture}[->,thick]
       \node (scala) at (0,0) {\scalaFiles[1.2]};
       \node (js) at (8,0) {\jsFile[1.2]};
       \node (scalajs) at (4,0) {\scalajsld[1.5]};
 
-      \draw[->,thick] (scala) -- (scalajs);
-      \draw[->,thick] (scalajs) -- (js);
+      \draw (scala) -- (scalajs);
+      \draw (scalajs) -- (js);
     \end{tikzpicture}
 
     \vspace{1cm}
