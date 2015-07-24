@@ -335,13 +335,44 @@
 \begin{frame}
   \frametitle{Phases of the Scala.js Linker}
 
-  \begin{itemize}
-  \item Linking (alive code inclusion)
-  \item Optimizer
-  \item Refiner (dead code elimination)
-  \item Emitter / Desugarer
-  \item Google Closure Compiler
-  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}[->,thick,
+      phase/.style={
+        draw,
+        rectangle, rounded corners = 9pt,
+        text width=2cm,
+        text depth=.9ex,
+        text height=.9em,
+        text centered}
+      ]
+
+      \node (sjsir) at (0, 6) {\sjsirFiles};
+
+      \node[phase] (linker) at (3, 6) {Linker};
+
+      \node[phase,dashed] (irchecker) at (5.5, 5) {IR Checker};
+
+      \node[phase] (optimizer) at (3, 4.5) {Optimizer};
+      \node[phase] (refiner) at (3, 3) {Refiner};
+      \node[phase] (desugar) at (3, 1.5) {Desugar};
+
+      \node[phase,dashed] (closure) at (3, 0) {Closure};
+
+      \node (fastopt) at (7,1.5) {\jsFile};
+      \node (fullopt) at (7,0) {\jsFile[0.7]};
+
+      \draw[dashed] (linker) to [out=-90,in=180,right] (irchecker);
+      \draw (sjsir) -- (linker);
+      \draw (linker) -- (optimizer);
+      \draw (optimizer) -- (refiner);
+      \draw (refiner) -- (desugar);
+      \draw (desugar) -- node[above] {fastOpt} (fastopt);
+
+      \draw[dashed] (desugar) -- (closure);
+      \draw[dashed] (closure) -- node[above] {fullOpt} (fullopt);
+
+    \end{tikzpicture}
+  \end{center}
 
 \end{frame}
 
