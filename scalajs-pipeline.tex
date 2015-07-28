@@ -3,30 +3,71 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{alltt}
-\usepackage{amssymb}
-%\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinelanguage{scala}{
+  morekeywords={abstract,case,catch,class,def,%
+    do,else,extends,false,final,finally,%
+    for,if,implicit,import,match,mixin,%
+    new,null,object,override,package,%
+    private,protected,requires,return,sealed,%
+    super,this,throw,trait,true,try,%
+    type,val,var,while,with,yield},
+  otherkeywords={=>,<-,<\%,<:,>:,\#},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}
+
+
+%\usepackage{amssymb}
 %\usepackage[overlay,absolute]{textpos}
 %\usepackage[normalem]{ulem}
 
 \usepackage{tikz}
 \usepackage{tkz-berge}
 
-%%%% Colors for source highlighting
-%%\definecolor{scKW}  {HTML}{AA37F2}
-%%\definecolor{scFct} {HTML}{1010FF}
-%%\definecolor{scType}{HTML}{228B22}
-%%\definecolor{scVar} {HTML}{A45936}
-%%\definecolor{scComm}{HTML}{B32525}
-%%
-%%%% Define _s_cala commands
-%%\newcommand{\sK}[1]{{\color{scKW} #1}}
-%%\newcommand{\sF}[1]{{\color{scFct} #1}}
-%%\newcommand{\sV}[1]{{\color{scVar} #1}}
-%%\newcommand{\sT}[1]{{\color{scType} #1}}
-%%\newcommand{\sC}[1]{{\color{scComm} #1}}
-%%\newcommand{\sH}[1]{{\color{white} #1}}
-%%\newcommand{\sN}[1]{{\color{black} #1}}
-%%\newcommand{\sS}{\vspace{0.8mm}}
+%% Colors for source highlighting
+\definecolor{scKW}  {HTML}{AA37F2}
+\definecolor{scFct} {HTML}{1010FF}
+\definecolor{scType}{HTML}{228B22}
+\definecolor{scVar} {HTML}{A45936}
+\definecolor{scComm}{HTML}{B32525}
+\definecolor{scObj} {HTML}{008D92}
+\definecolor{scStr} {HTML}{952952}
+
+\lstset{
+language=scala,
+basicstyle=\small\ttfamily,
+columns=flexible,
+%texcsstyle=*\bf\color{blue},
+%numbers=left,
+%breaklines=true,
+keywordstyle=\color{scKW},
+stringstyle=\color{scStr},
+showstringspaces=false,
+commentstyle=\color{scComm},
+%otherkeywords={$},
+%frame=leftline,
+%backgroundcolor=\color{lightgrey},
+%escapeinside=||
+}
+
+
+%% Define _s_cala commands
+\newcommand{\sK}[1]{{\color{scKW} #1}}
+\newcommand{\sF}[1]{{\color{scFct} #1}}
+\newcommand{\sV}[1]{{\color{scVar} #1}}
+\newcommand{\sT}[1]{{\color{scType} #1}}
+\newcommand{\sC}[1]{{\color{scComm} #1}}
+\newcommand{\sO}[1]{{\color{scObj} #1}}
+\newcommand{\sS}[1]{{\color{scStr} #1}}
+\newcommand{\sH}[1]{{\color{white} #1}}
+\newcommand{\sN}[1]{{\color{black} #1}}
 
 %% Define other commands
 %%\newcommand<>{\strike}[1]{\alt#2{\sout{#1}}{#1}}
@@ -88,7 +129,6 @@
 \end{frame}
 
 \section{A View From Above}
-\subsection{Scala JVM Pipeline}
 
 \begin{frame}
   \frametitle{Scala JVM Pipeline}
@@ -127,7 +167,6 @@
   \end{center}
 \end{frame}
 
-\subsection{Scala.js Pipeline}
 \begin{frame}
   \frametitle{Scala.js Pipeline}
 
@@ -172,57 +211,6 @@
       \draw<3-> (class1) -- (scalajsc2);
     \end{tikzpicture}
   \end{center}
-\end{frame}
-
-\section{Scala.js IR}
-
-\begin{frame}
-  \frametitle{Scala.js IR}
-  \framesubtitle{The copied part}
-
-  \begin{block}<+->{Classes}
-    \begin{itemize}
-    \item Single class, multi interface inheritance
-    \item No nested classes
-    \end{itemize}
-  \end{block}
-
-  \begin{block}<+->{Interfaces}
-    \begin{itemize}
-    \item No implementations / default methods (yet)
-    \end{itemize}
-  \end{block}
-
-  \begin{block}<+->{Types}
-    \begin{itemize}
-    \item Primitive types (\texttt{int}, \texttt{long}, \ldots)
-    \item Class types (\texttt{my.package.Foo}, \ldots)
-    \item Array types (\texttt{int[]}, \texttt{Foo[]}, \ldots)
-    \item No generics
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Scala.js IR}
-  \framesubtitle{The different part}
-
-  \begin{block}<+->{Modules (aka Objects)}
-  \end{block}
-
-  \begin{block}<+->{Types}
-    \begin{itemize}
-    \item String type
-    \end{itemize}
-  \end{block}
-
-  \begin{block}<+->{Operations}
-    \begin{itemize}
-    \item AST form
-    \item Statements in expression position
-    \item JavaScript operations
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 \section{Scala.js Compiler}
@@ -315,25 +303,179 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Scala.js Compiler -- Duties}
+  \frametitle{Scala.js Compiler Output: The IR}
+  \framesubtitle{Parts identical to JVM bytecode}
 
-  \begin{block}<-2>{JVM like parts \only<2->{\checkmark}}
+  \begin{block}<+->{Classes}
     \begin{itemize}
-    \item Classes
-    \item Interfaces
-    \item Types
+    \item Single class, multi interface inheritance
+    \item No nested classes
     \end{itemize}
   \end{block}
 
-  \begin{block}<-7>{Parts different from the JVM}
+  \begin{block}<+->{Interfaces}
     \begin{itemize}
-    \item<-6> Modules (aka objects) \only<4->{\checkmark}
+    \item No implementations / default methods (yet)
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<+->{Types}
+    \begin{itemize}
+    \item Primitive types (\texttt{int}, \texttt{long}, \ldots)
+    \item Class types (\texttt{my.package.Foo}, \ldots)
+    \item Array types (\texttt{int[]}, \texttt{Foo[]}, \ldots)
+    \item No generics
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scala.js IR}
+  \framesubtitle{Parts different from JVM bytecode}
+
+  \begin{block}<+->{Types}
+    \begin{itemize}
     \item String type
-    \item<-6> AST form \only<5->{\checkmark}
-    \item<-6> Statements in expression position \only<6->{\checkmark}
-    \item JavaScript operations
     \end{itemize}
   \end{block}
+
+  \begin{block}<+->{Classes}
+    \begin{itemize}
+    \item Overloading via name mangling
+    \item JavaScript methods (aka Exports)
+    \end{itemize}
+  \end{block}
+
+  \begin{block}<+->{Operations}
+    \begin{itemize}
+    \item<-4> AST form
+    \item<-4> Statements in expression position
+    \item<-5> JavaScript operations
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- Overloads}
+
+  \begin{block}{Scala Source Code}
+    \begin{lstlisting}[gobble=6]
+      class Overloads {
+        def foo(x: Int): Int = 2 * x
+        def foo(x: Int, y: Seq[Int]): Int = x + y.length
+      }
+    \end{lstlisting}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Scala.js IR}
+    \begin{lstlisting}[gobble=6]
+      class LOverloads extends O {
+        def foo__I__I(x: int): int = (2 *[int] x)
+        def foo__I__sc_Seq__I(x: int, y: sc_Seq): int = {
+          (x +[int] y.length__I())
+        }
+      }
+    \end{lstlisting}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- Calling JavaScript}
+
+  \begin{block}{Scala Source Code}
+    \begin{overprint}
+      \onslide<1-2>
+      \begin{lstlisting}[gobble=8]
+        val jsDate: js.Date = new js.Date()
+        val javaDate: java.util.Date = new java.util.Date()
+
+        jsDate.getMilliseconds
+        javaDate.getTime
+      \end{lstlisting}
+
+      \onslide<3>
+      \begin{lstlisting}[gobble=8]
+        class Date extends js.Object {
+          def getMilliseconds(): Int = js.native
+        }
+        val jsDate: js.Date = new js.Date()
+        jsDate.getMilliseconds
+      \end{lstlisting}
+    \end{overprint}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Scala.js IR}
+    \begin{lstlisting}[gobble=6]
+      val jsDate: any = new (<envinfo>["global"]["Date"])();
+      val javaDate: ju_Date = new ju_Date().init___();
+
+      jsDate["getMilliseconds"]();
+      javaDate.getTime__J()
+    \end{lstlisting}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- Exports}
+
+  \begin{block}{Scala Source Code}
+    \begin{lstlisting}[gobble=6]
+      class Exported {
+        @JSExport("foo")
+        def more(x: Int): Int = x + 2
+        @JSExport
+        def foo(x: String): String = "foo" + x
+      }
+    \end{lstlisting}
+  \end{block}
+
+  \pause
+
+  \begin{block}{After \texttt{jsinterop}}
+    \begin{lstlisting}[gobble=6]
+      class Exported {
+        def more(x: Int): Int = x + 2
+        def foo(x: String): String = "foo" + x
+
+        // Generated by jsinterop
+        def $$js$exported$meth$foo(x: Int): Any = more(x)
+        def $$js$exported$meth$foo(x: String): Any = foo(x)
+      }
+    \end{lstlisting}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- Exports}
+
+  \begin{lstlisting}[gobble=4]
+    class LExported extends O {
+      def more__I__I(x: int): int = (x +[int] 2)
+      def foo__T__T(x: T): T = ("foo" +[string] x)
+      def $$js$exported$meth$foo__I__O(x: int): any = more__I__I(x)
+      def $$js$exported$meth$foo__T__O(x: T): any = foo__T__T(x)
+      def "foo"(arg$1: any): any = {
+        if (arg$1.isInstanceOf[jl_Integer]) {
+          val prep0: int = arg$1.asInstanceOf[I];
+          this.$$js$exported$meth$foo__I__O(prep0)
+        } else if (arg$1.isInstanceOf[T]) {
+          val prep0: T = arg$1.asInstanceOf[T];
+          this.$$js$exported$meth$foo__T__O(prep0)
+        } else {
+          throw "No matching overload"
+        }
+      }
+    }
+  \end{lstlisting}
+  %$ // fix syntax highlighting
 
 \end{frame}
 
@@ -393,7 +535,9 @@
   \item \texttt{scala.Enumeration}
   \item Instance tests for raw JavaScript types
   \item IR Helper types (Undefined, Null, Nothing, NoType, Record-types)
-  \item IR Labeled Blocks
+  \item IR Labeled Blocks (pattern matches, tailrec methods)
+  \item IR Modules (objects)
+  \item Exporting classes (constructors)
   \item Reflective Calls
   \end{itemize}
 \end{frame}
