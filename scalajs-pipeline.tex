@@ -115,7 +115,7 @@ commentstyle=\color{scComm},
 
 \begin{document}
 
-\begin{frame}
+\begin{frame}[label=simplepipeline]
   \begin{center}
     \visible<2>{\Large The Scala.js Compilation Pipeline}
 
@@ -183,7 +183,7 @@ commentstyle=\color{scComm},
   \end{center}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[label=scalajspipeline]
   \frametitle{Scala.js Pipeline}
 
   \begin{center}
@@ -327,11 +327,11 @@ commentstyle=\color{scComm},
       val msgs = new HelloFactory
 
       @JSExport("multiAlert")
-      def !!(n: Int) =
+      def !!(n: Int): Unit =
         for (i <- 1 to n) dom.alert(msgs.hello(i))
 
       @JSExport("multiAlert")
-      def !!(name: String) =
+      def !!(name: String): Unit =
         for (p <- name.permutations) dom.alert(msgs.hello(p))
     }
 
@@ -512,6 +512,9 @@ commentstyle=\color{scComm},
 
 \end{frame}
 
+\againframe<2>{scalajsc}
+\againframe<4>{scalajspipeline}
+
 \section{Scala.js Linker}
 
 \begin{frame}[label=scalajsld]
@@ -595,6 +598,70 @@ commentstyle=\color{scComm},
 
 \begin{frame}[fragile]
   \frametitle{Scala.js Linker -- Emitter Phase}
+  \framesubtitle{Desugaring}
+
+  \begin{block}{Scala Code\phantom{p}}
+    \begin{lstlisting}[gobble=6]
+      def norm(a: Int, b: String) = {
+        val a2 = a * a
+        val b2 = { val b0 = b.toInt; b0 * b0 }
+        math.sqrt(a2 + b2)
+      }
+    \end{lstlisting}
+  \end{block}
+
+  \pause
+
+  \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
+    \begin{overprint}
+      \onslide<-+>
+      \begin{lstlisting}[language=javascript,gobble=8]
+        var norm = function(a, b) {
+          return {
+            var a2 = a * a;
+            var b2 = {
+              var b0 = parseInt(b, 10)
+              b0 * b0;
+            };
+            Math.sqrt(a2 + b2);
+          };
+        }
+      \end{lstlisting}
+
+      \onslide<+>
+      \begin{lstlisting}[language=javascript,gobble=8]
+        var norm = function(a, b) {
+          {
+            var a2 = a * a;
+            var b2 = {
+              var b0 = parseInt(b, 10)
+              b0 * b0;
+            };
+            return Math.sqrt(a2 + b2);
+          }
+        }
+      \end{lstlisting}
+
+      \onslide<+->
+      \begin{lstlisting}[language=javascript,gobble=8]
+        var norm = function(a, b) {
+          {
+            var a2 = a * a;
+            {
+              var b0 = parseInt(b, 10)
+              var b2 = b0 * b0;
+            }
+            return Math.sqrt(a2 + b2);
+          }
+        }
+      \end{lstlisting}
+    \end{overprint}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Linker -- Emitter Phase}
   \framesubtitle{Class Emission Order}
 
   \begin{columns}[t]
@@ -639,23 +706,44 @@ commentstyle=\color{scComm},
 
 \end{frame}
 
+\againframe{scalajsld}
+
+\againframe<1>{simplepipeline}
+
 \section*{Things I Shamelessly Omitted}
 
 \begin{frame}
   \frametitle{Things I Shamelessly Omitted}
 
-  \begin{itemize}
-  \item Hijacked Classes (and string IR type)
-  \item \texttt{scala.Enumeration}
-  \item Instance tests for raw JavaScript types
-  \item IR Helper types (Undefined, Null, Nothing, NoType, Record-types)
-  \item IR Labeled Blocks (pattern matches, tailrec methods)
-  \item IR Modules (objects)
-  \item Exporting classes (constructors)
-  \item Reflective Calls
-  \item Longs
-  \item JavaScript Function literals
-  \end{itemize}
+  \begin{block}{Scala.js IR}
+    \begin{itemize}
+    \item Hijacked Classes (and string IR type)
+    \item Helper types (Undefined, Null, Nothing, NoType, Records)
+    \item Labeled Blocks (pattern matches, tailrec methods)
+    \item Modules (objects)
+    \end{itemize}
+  \end{block}
+
+  \begin{columns}[t]
+    \column{.45\textwidth}
+    \begin{block}{Compiler}
+      \begin{itemize}
+      \item \texttt{scala.Enumeration}
+      \item Reflective Calls
+      \item JavaScript Function literals
+      \end{itemize}
+    \end{block}
+
+    \column{.45\textwidth}
+    \begin{block}{Linker}
+      \begin{itemize}
+      \item Instance tests for raw JavaScript types
+      \item Longs
+      \item Output modes
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
 \end{frame}
 
 \end{document}
