@@ -83,8 +83,9 @@ commentstyle=\color{scComm},
 \newcommand{\sH}[1]{{\color{white} #1}}
 \newcommand{\sN}[1]{{\color{black} #1}}
 
-%% Define other commands
+%% Define overlay aware commands
 %%\newcommand<>{\strike}[1]{\alt#2{\sout{#1}}{#1}}
+\newcommand<>{\alertDraw}{\alt#1{\draw[draw=red]}{\draw}}
 
 %%% File icons
 \newcommand{\scalaFile}{\includegraphics{icons/files/scala}}
@@ -279,9 +280,12 @@ commentstyle=\color{scComm},
   \end{columns}
 \end{frame}
 
-\begin{frame}[label=scalajsc]
+\begin{frame}<-2>[label=scalajsc]
+  %% Used in multiple spots
+  %% Overlays 1 - 2 used here
+  %% Overlays 3 - 6 highlights of individual arrows
+
   \frametitle{Phases of the Scala.js Compiler}
-  \framesubtitle{Simplified}
 
   \begin{center}
     \begin{tikzpicture}[->,thick,
@@ -298,26 +302,26 @@ commentstyle=\color{scComm},
       \node[label=below:app.scala] (scala) at (1,4) {\scalaFiles};
       \node[label=below:lib.class] (inclass) at (7,4) {\classFiles};
 
-      \node[phase] (frontend) at (4, 4) {\texttt{typer}};
+      \node[phase] (frontend) at (4, 4) {frontend};
 
       \node[phase] (jsinterop) at (4, 2.5) {\texttt{jsinterop}};
-      \node<2> at (2.9, 2.8) {\scalajsld[0.35]};
+      \node<2-> at (2.9, 2.8) {\scalajsld[0.35]};
 
-      \node[phase] (scalac) at (4, 1) {\texttt{scalac}};
+      \node[phase] (scalac) at (4, 1) {backend};
 
       \node[phase] (jscode) at (1, 0) {\texttt{jscode}};
-      \node<2> at (-.1, 0.3) {\scalajsld[0.35]};
+      \node<2-> at (-.1, 0.3) {\scalajsld[0.35]};
 
       \node[phase] (jvm) at (7, 0) {\texttt{jvm}};
 
       \node[label=below:app.sjsir] (sjsir) at (1, -1.5) {\sjsirFiles};
       \node[label=below:app.class] (class) at (7, -1.5) {\classFiles};
 
-      \draw (scala) -- (frontend);
+      \alertDraw<3> (scala) -- (frontend);
       \draw[dashed] (inclass) -- (frontend);
-      \draw (frontend) -- (jsinterop);
-      \draw (jsinterop) -- (scalac);
-      \draw (scalac) -- (jscode);
+      \alertDraw<4> (frontend) -- (jsinterop);
+      \alertDraw<5> (jsinterop) -- (scalac);
+      \alertDraw<6> (scalac) -- (jscode);
       \draw (scalac) -- (jvm);
       \draw (jscode) -- (sjsir);
       \draw (jvm) -- (class);
@@ -333,23 +337,47 @@ commentstyle=\color{scComm},
     class MultiAlerter {
       val msgs = new HelloFactory
 
-      @JSExport("multiAlert")
-      def !!(n: Int): Unit =
+      @JSExport
+      def multiAlert(n: Int) =
         for (i <- 1 to n) dom.alert(msgs.hello(i))
-
-      @JSExport("multiAlert")
-      def !!(name: String): Unit =
-        for (p <- name.permutations) dom.alert(msgs.hello(p))
     }
 
     class HelloFactory {
       def hello(x: Int) = s"Hello World #$x"
-      def hello() = "Hello World"
-      def hello(name: String) = s"Hello $name"
+      def helloDebug() = "Hello World"
+    }
+  \end{lstlisting}
+  % $ fix syntax highlighting
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- After frontend}
+
+  \begin{lstlisting}[gobble=4]
+    @JSExport
+    class MultiAlerter {
+      val msgs: HelloFactory = new HelloFactory
+
+      @JSExport
+      def multiAlert(n: Int): Unit = {
+        intWrapper(1).to(n).foreach[Unit] { (i: Int) =>
+          dom.alert(msgs.hello(i))
+        }
+      }
+    }
+
+    class HelloFactory {
+      def hello(x: Int): String =
+        StringContext.apply("Hello World #", "").s(x)
+
+      def helloDebug(): String = "Hello World"
     }
   \end{lstlisting}
 
 \end{frame}
+
+\againframe<3-4>{scalajsc}
 
 \subsection{\texttt{jsinterop} Phase}
 
@@ -368,13 +396,10 @@ commentstyle=\color{scComm},
   \begin{lstlisting}[gobble=4]
     @JSExport
     class MultiAlerter {
-      val msgs = new HelloFactory
-      def !!(n: Int): Unit = // snip
-      def !!(name: String): Unit = // snip
-      def $js$exported$meth$multiAlert(n: Int): Any =
-        this.!!(n)
-      def $js$exported$meth$multiAlert(name: String): Any =
-        this.!!(name)
+      val msgs: HelloFactory = new HelloFactory
+      def multiAlert(n: Int): Unit = // snip
+
+      def $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)
     }
 
     class HelloFactory // Unchanged
@@ -382,9 +407,38 @@ commentstyle=\color{scComm},
 
 \end{frame}
 
+\againframe<5>{scalajsc}
+
+\begin{frame}[fragile]
+  \frametitle{Scala.js Compiler -- After backend}
+
+  \begin{lstlisting}[gobble=4]
+    @JSExport
+    class MultiAlerter {
+      val msgs: HelloFactory = _
+      def <init>(): MultiAlerter = { msgs = new HelloFactory }
+
+      def multiAlert(n: Int): Unit = {
+        RichInt.to$extension0(intWrapper(1), n).foreach[Unit](
+          (new <$anon: Function1>(MultiAlerter.this): Function1)));
+      }
+      def $js$exported$meth$multiAlert(n: Int): Object = // snip
+    }
+
+    class HelloFactory {
+      def hello(x: Int): String = {
+        new StringContext(wrapRefArray(Array{"Hello World #", ""}))
+          .s(genericWrapArray(Array{Int.box(x)}));
+      }
+      def helloDebug(): String = "Hello World"
+    }
+  \end{lstlisting}
+
+\end{frame}
+
 \subsection{\texttt{jscode} Phase}
 
-\againframe<2>{scalajsc}
+\againframe<6>{scalajsc}
 
 \begin{frame}<1-6>[label=sjsir]
   %% Used in multiple spots
