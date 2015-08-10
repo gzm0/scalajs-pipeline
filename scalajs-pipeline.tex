@@ -295,8 +295,8 @@ commentstyle=\color{scComm},
       ]
       \useasboundingbox (0,-1) rectangle (8,4);
 
-      \node (scala) at (1,4) {\scalaFiles};
-      \node (inclass) at (7,4) {\classFiles};
+      \node[label=below:app.scala] (scala) at (1,4) {\scalaFiles};
+      \node[label=below:lib.class] (inclass) at (7,4) {\classFiles};
 
       \node[phase] (frontend) at (4, 4) {\texttt{typer}};
 
@@ -310,8 +310,8 @@ commentstyle=\color{scComm},
 
       \node[phase] (jvm) at (7, 0) {\texttt{jvm}};
 
-      \node (sjsir) at (1, -1.5) {\sjsirFiles};
-      \node (class) at (7, -1.5) {\classFiles};
+      \node[label=below:app.sjsir] (sjsir) at (1, -1.5) {\sjsirFiles};
+      \node[label=below:app.class] (class) at (7, -1.5) {\classFiles};
 
       \draw (scala) -- (frontend);
       \draw[dashed] (inclass) -- (frontend);
