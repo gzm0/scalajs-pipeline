@@ -92,6 +92,7 @@ commentstyle=\color{scComm},
 \newcommand{\jsFile}[1][1]{\includegraphics[scale=#1]{icons/files/js}}
 \newcommand{\classFiles}{\includegraphics{icons/files/class_}}
 \newcommand{\sjsirFiles}{\includegraphics{icons/files/sjsir_}}
+\newcommand{\sjsirclassFiles}{\includegraphics{icons/files/sjsir_class_}}
 
 \newcommand{\packageIcon}{\includegraphics{icons/files/package}}
 
@@ -151,34 +152,34 @@ commentstyle=\color{scComm},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,-1) rectangle (10,5);
+      \useasboundingbox (0,0) rectangle (10,6);
 
       % Top pipeline
-      \node (scala1) at (0,4) {\scalaFiles};
-      \node (scalac1) at (2.5,4) {\scalac};
-      \node (class1) at (5.5,4) {\classFiles};
-      \node<2-> at (5,4.6) {\packageIcon};
+      \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
+      \node (scalac1) at (2.5,4.5) {\scalac};
+      \node[label=below:app.\alt<2->{jar}{class}] (class1) at (5.5,4.5) {\classFiles};
+      \node<2-> at (5,5.2) {\packageIcon};
 
       \draw (scala1) -- (scalac1);
       \draw (scalac1) -- (class1);
 
       % Bottom pipeline
-      \node<3-> (scala2) at (0,0) {\scalaFiles};
+      \node<3->[label=below:lib.scala] (scala2) at (0,0) {\scalaFiles};
       \node<3-> (scalac2) at (2.5,0) {\scalac};
-      \node<3-> (class2) at (5.5,0) {\classFiles};
-      \node<3-> at (5, .6) {\packageIcon};
+      \node<3->[label=below:lib.jar] (class2) at (5.5,0) {\classFiles};
+      \node<3-> (jar2) at (5, .6) {\packageIcon};
 
       \draw<3-> (scala2) -- (scalac2);
       \draw<3-> (scalac2) -- (class2);
 
       % JVM and inputs
-      \node (jvm) at (9,2) {\javaVM};
+      \node (jvm) at (9,2.25) {\javaVM};
 
       \draw (class1) -- (jvm);
       \draw<3-> (class2) -- (jvm);
 
       % Compilation symbols
-      \draw<4-> (class1) -- (scalac2);
+      \draw<4-> (jar2) -- (scalac1);
     \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -188,43 +189,49 @@ commentstyle=\color{scComm},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,-1) rectangle (10,5);
+      \useasboundingbox (0,0) rectangle (10,6);
 
       % Top pipeline
-      \node (scala1) at (0,4) {\scalaFiles};
-      \node (scalajsc1) at (2.5,4) {\scalajsc};
-      \node<1> (sjsir1) at (5.5,4) {\sjsirFiles};
-      \node<2-> (sjsir1) at (5.5,4.7) {\sjsirFiles};
-      \node<2-> (class1) at (5.5,3.3) {\classFiles};
-      \node<4-> at (5,4) {\packageIcon};
+      \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
+      \node (scalajsc1) at (2.5,4.5) {\scalajsc};
+      \node<-3>[label=below:app.sjsir] (sjsir1) at (5.5,4.5) {\sjsirFiles};
+      \node<2-3>[label=app.class] (class1) at (5.5,5.9) {\classFiles};
+      \node<4>[label=below:app.jar] (jar1) at (5.5,4.5) {\sjsirclassFiles};
+      \node<4> at (5,5.2) {\packageIcon};
 
       \draw (scala1) -- (scalajsc1);
-      \draw (scalajsc1) -- (class1);
-      \draw (scalajsc1) -- (sjsir1);
+      \draw<-3> (scalajsc1) -- (sjsir1);
+      \draw<2-3> (scalajsc1) -- (class1);
+      \draw<4> (scalajsc1) -- (jar1);
 
       % Bottom pipeline
-      \node (scala2) at (0,0) {\scalaFiles};
+      \node[label=below:lib.scala] (scala2) at (0,0) {\scalaFiles};
       \node (scalajsc2) at (2.5,0) {\scalajsc};
-      \node<1> (sjsir2) at (5.5,0) {\sjsirFiles};
-      \node<2-> (sjsir2) at (5.5,.7) {\sjsirFiles};
-      \node<2-> (class2) at (5.5,-.7) {\classFiles};
-      \node<4-> at (5,0) {\packageIcon};
+      \node<-3>[label=below:lib.sjsir] (sjsir2) at (5.5,0) {\sjsirFiles};
+      \node<2-3>[label=lib.class] (class2) at (5.5,1.4) {\classFiles};
+      \node<4>[label=below:lib.jar] (jar2) at (5.5,0) {\sjsirclassFiles};
+      \node<4> (p2) at (5,.6) {\packageIcon};
 
       \draw (scala2) -- (scalajsc2);
-      \draw (scalajsc2) -- (class2);
-      \draw (scalajsc2) -- (sjsir2);
+      \draw<-3> (scalajsc2) -- (sjsir2);
+      \draw<2-3> (scalajsc2) -- (class2);
+      \draw<4> (scalajsc2) -- (jar2);
 
       % Linker and JS file
-      \node (scalajsld) at (9,3) {\scalajsld};
-      \node (js) at (9,.5) {\jsFile};
+      \node (scalajsld) at (9,2.25) {\scalajsld};
+      \node (js) at (9,0) {\jsFile};
 
-      \draw (sjsir1) -- (scalajsld);
-      \draw (sjsir2) -- (scalajsld);
+      \draw<-3> (sjsir1) -- (scalajsld);
+      \draw<4> (jar1) -- (scalajsld);
+
+      \draw<-3> (sjsir2) -- (scalajsld);
+      \draw<4> (jar2) -- (scalajsld);
 
       \draw (scalajsld) -- (js);
 
       % Compilation symbols
-      \draw<3-> (class1) -- (scalajsc2);
+      \draw<3> (class2) -- (scalajsc1);
+      \draw<4> (p2) -- (scalajsc1);
     \end{tikzpicture}
   \end{center}
 \end{frame}
