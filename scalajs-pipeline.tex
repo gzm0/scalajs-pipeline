@@ -2,9 +2,9 @@
 
 \usepackage[utf8]{inputenc}
 
-\usepackage{alltt}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{tikz}
 
 \lstdefinelanguage{scala}{
   morekeywords={abstract,case,catch,class,def,%
@@ -23,28 +23,6 @@
   morestring=[b]"""
 }
 
-\lstdefinelanguage{javascript}{
-  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
-  ndkeywords={class, export, boolean, throw, implements, import, this},
-  ndkeywordstyle=\color{darkgray}\bfseries,
-%  identifierstyle=\color{black},
-  sensitive=false,
-  comment=[l]{//},
-  morecomment=[s]{/*}{*/},
-%  commentstyle=\color{purple}\ttfamily,
-%  stringstyle=\color{red}\ttfamily,
-  morestring=[b]',
-  morestring=[b]"
-}
-
-
-%\usepackage{amssymb}
-%\usepackage[overlay,absolute]{textpos}
-%\usepackage[normalem]{ulem}
-
-\usepackage{tikz}
-\usepackage{tkz-berge}
-
 %% Colors for source highlighting
 \definecolor{scKW}  {HTML}{AA37F2}
 \definecolor{scFct} {HTML}{1010FF}
@@ -58,19 +36,11 @@
 language=scala,
 basicstyle=\small\ttfamily,
 columns=flexible,
-%texcsstyle=*\bf\color{blue},
-%numbers=left,
-%breaklines=true,
 keywordstyle=\color{scKW},
 stringstyle=\color{scStr},
 showstringspaces=false,
 commentstyle=\color{scComm},
-%otherkeywords={$},
-%frame=leftline,
-%backgroundcolor=\color{lightgrey},
-%escapeinside=||
 }
-
 
 %% Define _s_cala commands
 \newcommand{\sK}[1]{{\color{scKW} #1}}
@@ -83,11 +53,9 @@ commentstyle=\color{scComm},
 \newcommand{\sH}[1]{{\color{white} #1}}
 \newcommand{\sN}[1]{{\color{black} #1}}
 
-%% Define overlay aware commands
-%%\newcommand<>{\strike}[1]{\alt#2{\sout{#1}}{#1}}
-\newcommand<>{\alertDraw}{\alt#1{\draw[draw=red]}{\draw}}
+%%% Icons
 
-%%% File icons
+%% File icons
 \newcommand{\scalaFile}{\includegraphics{icons/files/scala}}
 \newcommand{\scalaFiles}[1][1]{\includegraphics[scale=#1]{icons/files/scala_}}
 \newcommand{\jsFile}[1][1]{\includegraphics[scale=#1]{icons/files/js}}
@@ -97,19 +65,24 @@ commentstyle=\color{scComm},
 
 \newcommand{\packageIcon}{\includegraphics{icons/files/package}}
 
-%%% Component icons
+%% Component icons
 \newcommand{\scalajsc}{\includegraphics{icons/components/scalajsc}}
 \newcommand{\scalajsld}[1][1]{\includegraphics[scale=#1]{icons/components/scalajsld}}
 \newcommand{\scalac}{\includegraphics{icons/components/scalac}}
 \newcommand{\javaVM}{\includegraphics{icons/components/jvm}}
+
+%%% Misc
+
+%% Overlay aware commands
+\newcommand<>{\alertDraw}{\alt#1{\draw[draw=red]}{\draw}}
+
+%%% Beamer specific settings
 
 \setbeamercovered{transparent}
 \setbeamertemplate{navigation symbols}
 
 % Frame number on page
 \setbeamertemplate{footline}{\makebox[0.98\paperwidth][r]{\large \raisebox{1.2ex}{\insertframenumber}}}
-
-\setcounter{tocdepth}{1}
 
 \title{The Scala.js Compilation Pipeline}
 \author{Tobias Schlatter}
@@ -231,44 +204,44 @@ commentstyle=\color{scComm},
 
 \section{Scala.js Compiler}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Phases of the Scala.js Compiler}
 
   \begin{columns}[t]
     \column{.5\textwidth}
-    \begin{alltt}
-      parser\\
-      namer\\
-      packageobjects\\
-      typer\\
-      \alert<2>{jsinterop\\}
-      patmat\\
-      superaccessors\\
-      extmethods\\
-      pickler\\
-      refchecks\\
-      uncurry\\
-      tailcalls\\
-      specialize\\
-    \end{alltt}
+    \begin{semiverbatim}
+parser
+namer
+packageobjects
+typer
+\alert<2>{jsinterop}
+patmat
+superaccessors
+extmethods
+pickler
+refchecks
+uncurry
+tailcalls
+specialize
+    \end{semiverbatim}
 
     \column{.5\textwidth}
-    \begin{alltt}
-      explicitouter\\
-      erasure\\
-      posterasure\\
-      lazyvals\\
-      lambdalift\\
-      constructors\\
-      flatten\\
-      mixin\\
-      \alert<2>{jscode\\}
-      cleanup\\
-      delambdafy\\
-      icode\\
-      jvm\\
-      terminal
-    \end{alltt}
+    \begin{semiverbatim}
+explicitouter
+erasure
+posterasure
+lazyvals
+lambdalift
+constructors
+flatten
+mixin
+\alert<2>{jscode}
+cleanup
+delambdafy
+icode
+jvm
+terminal
+    \end{semiverbatim}
   \end{columns}
 \end{frame}
 
