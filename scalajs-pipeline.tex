@@ -740,52 +740,6 @@ var norm = function(a2, b) \{
 
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Scala.js Linker -- Emitter Phase}
-  \framesubtitle{Class Emission Order}
-
-  \begin{columns}[t]
-    \column{.37\textwidth}
-    \begin{block}{Scala Code\phantom{p}}
-      \begin{lstlisting}[gobble=8]
-        class A {
-          def a = (new B).b + 1
-        }
-
-        class B extends A {
-          def b = 1
-        }
-      \end{lstlisting}
-    \end{block}
-
-    \pause
-
-    \column{.53\textwidth}
-    \begin{block}{JavaScript Code}
-      \begin{lstlisting}[language=javascript,gobble=8]
-        var A = function() {};
-        A.prototype.a = function() // ...
-
-
-        var B = function() {};
-        B.prototype = new A();
-        B.prototype.b = function() // ...
-      \end{lstlisting}
-    \end{block}
-  \end{columns}
-
-  \pause
-
-  \begin{block}{Strategy}
-    \begin{itemize}
-    \item Definition only depends on superclass definition
-    \pause
-    \item Order definitions by superclass count
-    \end{itemize}
-  \end{block}
-
-\end{frame}
-
 \againframe<6>{scalajsld}
 \againframe<1>{simplepipeline}
 
@@ -817,8 +771,9 @@ var norm = function(a2, b) \{
     \column{.45\textwidth}
     \begin{block}{Linker}
       \begin{itemize}
-      \item Instance tests for raw JavaScript types
+      \item Instance tests
       \item Longs
+      \item Class emission order
       \item Output modes
       \end{itemize}
     \end{block}
