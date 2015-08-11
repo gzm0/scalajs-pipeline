@@ -24,6 +24,18 @@
   morestring=[b]"""
 }
 
+\lstdefinelanguage{javascript}{
+  keywords={typeof, new, true, false, catch,%
+    function, return, null, catch, switch, var,%
+    if, in, while, do, else, case, break, %
+    this, prototype},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+
 %% Colors for source highlighting
 \definecolor{scKeyword}{HTML}{AA37F2}
 \definecolor{scComment}{HTML}{228B22}
@@ -706,6 +718,31 @@ terminal
 \end{frame}
 
 \againframe<6>{scalajsld}
+
+\begin{frame}[fragile]
+  \frametitle{Final JavaScript}
+
+  \begin{lstlisting}[language=javascript]
+/** @constructor */
+var MultiAlerter = function() {
+  this.msgs$1 = new HelloFactory()
+};
+MultiAlerter.prototype.multiAlert__I__V = function(n) {
+  var i = 0;
+  while (i < n) {
+    alert(this.msgs$1.hello__I__T(i));
+    i = i + 1;
+  }
+};
+
+/** @constructor */
+var HelloFactory = function() {};
+HelloFactory.prototype.hello__I__T = function(x) {
+  return new StringContext(/* snip */).s(/* snip */)
+};
+\end{lstlisting}
+\end{frame}
+
 \againframe<1>{simplepipeline}
 
 \section*{Things I Shamelessly Omitted}
@@ -723,23 +760,27 @@ terminal
     \end{itemize}
   \end{block}
 
+  \vspace{-\baselineskip}
+
   \begin{columns}[t]
-    \column{.45\textwidth}
+    \column{.4\textwidth}
     \begin{block}{Compiler}
       \begin{itemize}
       \item \texttt{scala.Enumeration}
       \item Reflective Calls
-      \item JavaScript Function literals
+      \item Function literals
+      \item Export overloading
       \end{itemize}
     \end{block}
 
-    \column{.45\textwidth}
+    \column{.5\textwidth}
     \begin{block}{Linker}
       \begin{itemize}
       \item Instance tests
       \item Longs
       \item Class emission order
-      \item Output modes
+      \item JS Ctors \& Inheritance
+      \item Semantics / Output modes
       \end{itemize}
     \end{block}
   \end{columns}
