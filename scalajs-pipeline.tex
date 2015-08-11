@@ -283,7 +283,7 @@ commentstyle=\color{scComm},
 \begin{frame}<-2>[label=scalajsc]
   %% Used in multiple spots
   %% Overlays 1 - 2 used here
-  %% Overlays 3 - 6 highlights of individual arrows
+  %% Overlays 3 - 7 highlights of individual arrows
 
   \frametitle{Phases of the Scala.js Compiler}
 
@@ -323,7 +323,7 @@ commentstyle=\color{scComm},
       \alertDraw<5> (jsinterop) -- (scalac);
       \alertDraw<6> (scalac) -- (jscode);
       \draw (scalac) -- (jvm);
-      \draw (jscode) -- (sjsir);
+      \alertDraw<7> (jscode) -- (sjsir);
       \draw (jvm) -- (class);
     \end{tikzpicture}
   \end{center}
@@ -517,7 +517,7 @@ commentstyle=\color{scComm},
 
   \begin{block}{Scala Source Code}
     \begin{lstlisting}[gobble=6]
-      def !!(n: Int) =
+      def multiAlert(n: Int) =
         for (i <- 1 to n) dom.alert(msgs.hello(i))
     \end{lstlisting}
 
@@ -534,13 +534,14 @@ commentstyle=\color{scComm},
 
   \begin{block}{Scala.js IR}
     \begin{lstlisting}[gobble=6]
-      def $$bang$bang__I__V(n: int) {
+      def multiAlert__I__V(n: int) {
         // for (i <- 1 to n) {
           <global>["alert"](
             arg$outer.msgs__LHelloFactory().hello__I__T(i));
         // }
       }
     \end{lstlisting}
+    % $ fix syntax highlighting
   \end{block}
 
 \end{frame}
@@ -551,8 +552,8 @@ commentstyle=\color{scComm},
 
   \begin{block}{Scala Code after \texttt{jsinterop}}
     \begin{lstlisting}[gobble=6]
-      def $js$exported$meth$multiAlert(n: Int): Any = // snip
-      def $js$exported$meth$multiAlert(name: String): Any = // snip
+      def $js$exported$meth$multiAlert(n: Int): Any =
+        multiAlert(n)
     \end{lstlisting}
   \end{block}
 
@@ -560,20 +561,17 @@ commentstyle=\color{scComm},
 
   \begin{block}{Scala.js IR}
     \begin{lstlisting}[gobble=6]
-      def "multiAlert"(arg: any): any = arg match {
-        case arg: Int =>
-          $$js$exported$meth$multiAlert__I__O(arg)
-        case arg: String =>
-          $$js$exported$meth$multiAlert__T__O(arg)
-        case _ =>
-          throw "No matching overload"
+      def "multiAlert"(arg0: any): any = {
+        val prep0: int = arg0.asInstanceOf[I];
+        this.$$js$exported$meth$multiAlert__I__O(prep0)
       }
     \end{lstlisting}
+    % $ fix syntax highlighting
   \end{block}
 
 \end{frame}
 
-\againframe<2>{scalajsc}
+\againframe<7>{scalajsc}
 \againframe<4>{scalajspipeline}
 
 \section{Scala.js Linker}
