@@ -576,7 +576,9 @@ commentstyle=\color{scComm},
 
 \section{Scala.js Linker}
 
-\begin{frame}[label=scalajsld]
+\begin{frame}<-2>[label=scalajsld]
+  % Overlays are used in later inclusions of this frame
+
   \frametitle{Phases of the Scala.js Linker}
 
   \begin{center}
@@ -606,11 +608,11 @@ commentstyle=\color{scComm},
       \node (fullopt) at (7,0) {\jsFile[0.6]};
 
       \draw[dashed] (linker) to [out=-90,in=180,right] (irchecker);
-      \draw (sjsir) -- (linker);
-      \draw (linker) -- (optimizer);
-      \draw (optimizer) -- (refiner);
-      \draw (refiner) -- (emitter);
-      \draw (emitter) -- node[above] {fastOpt} (fastopt);
+      \alertDraw<2> (sjsir) -- (linker);
+      \alertDraw<3> (linker) -- (optimizer);
+      \alertDraw<4> (optimizer) -- (refiner);
+      \alertDraw<5> (refiner) -- (emitter);
+      \alertDraw<6> (emitter) -- node[above] {fastOpt} (fastopt);
 
       \draw[dashed] (emitter) -- (closure);
       \draw[dashed] (closure) -- node[above] {fullOpt} (fullopt);
@@ -622,36 +624,84 @@ commentstyle=\color{scComm},
 
 \subsection{Linker Phase}
 
-\begin{frame}[fragile]
+\begin{frame}<-7>[fragile]
+  % Overlay 8 is a dummy overlay to simulate a command that always greys out
+
   \frametitle{Scala.js Linker -- Linker Phase}
   \framesubtitle{Alive Code Inclusion}
 
-  \begin{lstlisting}[gobble=4]
-    @JSExport
-    class MultiAlerter {
-      val msgs = new HelloFactory
+  % Using semiverbatim because too many overlay interactions
+  \begin{semiverbatim}
+\uncover<2->{@JSExport}
+\uncover<3->{class MultiAlerter \{
+  val msgs = new HelloFactory}
 
-      @JSExport("multiAlert")
-      def !!(n: Int) =
-        for (i <- 1 to n) dom.alert(msgs.hello(i))
+  \uncover<5->{@JSExport}
+  \uncover<6->{def multiAlert(n: Int) =
+    for (i <- 1 to n) dom.alert(msgs.hello(i))}
+\uncover<3->{\}}
 
-      @JSExport("multiAlert")
-      def !!(name: String) =
-        for (p <- name.permutations) dom.alert(msgs.hello(p))
-    }
-
-    class HelloFactory {
-      def hello(x: Int) = s"Hello World #$x"
-      def hello() = "Hello World"
-      def hello(name: String) = s"Hello $name"
-    }
-  \end{lstlisting}
+\uncover<4->{class HelloFactory \{}
+  \uncover<7->{def hello(x: Int) = s"Hello World #$x"}
+  \uncover<8>{def helloDebug() = "Hello World"}
+\uncover<4->{\}}
+  \end{semiverbatim}
+  % $ fix syntax highlighting
 
 \end{frame}
 
-\againframe{scalajsld}
+\againframe<3>{scalajsld}
 
-\againframe<7-10>{sjsir}
+\begin{frame}[fragile]
+  \frametitle{Scala.js Linker -- Optimizer Phase}
+
+  \begin{overprint}
+    \onslide<1,3->
+    \begin{lstlisting}[gobble=6]
+      def multiAlert__I__V(n: int) {
+        // for (i <- 1 to n) {
+          <global>["alert"](
+            arg$outer.msgs__LHelloFactory().hello__I__T(i));
+        // }
+      }
+    \end{lstlisting}
+    % $ fix syntax highlighting
+
+
+    \begin{semiverbatim} \small \uncover<4>{
+def multiAlert__I__V(n: int) \{
+  var i: int = 0
+  while (i <[int] n) \{
+    <global>["alert"](this.msgs$1.hello__I__T(i));
+    i = i +[int] 1;
+  \}
+\}}
+    \end{semiverbatim}
+    % $ fix syntax highlighting
+
+    \onslide<2>
+    \begin{lstlisting}[gobble=6]
+      def multiAlert__I__V(n: int) {
+        mod:sr_RichInt$.to$extension0__I__I__sci_Range$Inclusive(
+          mod:s_Predef$.intWrapper__I__I(1), n).foreach$mVc$sp__F1__V(
+            new sjsr_AnonFunction1().init___sjs_js_Function1(
+            (lambda<this>(arg$outer: LMultiAlerter, i$2: any) = {
+              val i: int = i$2.asInstanceOf[I];
+              <global>["alert"](
+                arg$outer.msgs__LHelloFactory().hello__I__T(i)
+              );
+              (void 0)
+            }
+        )))
+      }
+    \end{lstlisting}
+  \end{overprint}
+
+\end{frame}
+
+\againframe<4-5>{scalajsld}
+
+\againframe<11-13>{sjsir}
 
 \subsection{Emitter Phase}
 
@@ -662,9 +712,8 @@ commentstyle=\color{scComm},
   \begin{block}{Scala Code\phantom{p}}
     \begin{lstlisting}[gobble=6]
       def norm(a: Int, b: String) = {
-        val a2 = a * a
         val b2 = { val b0 = b.toInt; b0 * b0 }
-        math.sqrt(a2 + b2)
+        math.sqrt(a * a + b2)
       }
     \end{lstlisting}
   \end{block}
@@ -672,49 +721,17 @@ commentstyle=\color{scComm},
   \pause
 
   \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
-    \begin{overprint}
-      \onslide<-+>
-      \begin{lstlisting}[language=javascript,gobble=8]
-        var norm = function(a, b) {
-          return {
-            var a2 = a * a;
-            var b2 = {
-              var b0 = parseInt(b, 10)
-              b0 * b0;
-            };
-            Math.sqrt(a2 + b2);
-          };
-        }
-      \end{lstlisting}
-
-      \onslide<+>
-      \begin{lstlisting}[language=javascript,gobble=8]
-        var norm = function(a, b) {
-          {
-            var a2 = a * a;
-            var b2 = {
-              var b0 = parseInt(b, 10)
-              b0 * b0;
-            };
-            return Math.sqrt(a2 + b2);
-          }
-        }
-      \end{lstlisting}
-
-      \onslide<+->
-      \begin{lstlisting}[language=javascript,gobble=8]
-        var norm = function(a, b) {
-          {
-            var a2 = a * a;
-            {
-              var b0 = parseInt(b, 10)
-              var b2 = b0 * b0;
-            }
-            return Math.sqrt(a2 + b2);
-          }
-        }
-      \end{lstlisting}
-    \end{overprint}
+    \begin{semiverbatim}
+\small{}var norm = function(a2, b) \{
+  \only<-2>{return }\{
+    \only<-3>{var b2 = }\{
+      var b0 = parseInt(b, 10)
+      \only<4->{var b2 = }b0 * b0;
+    \};
+    \only<3->{return }Math.sqrt(a * a + b2);
+  \};
+\}      
+    \end{semiverbatim}
   \end{block}
 
 \end{frame}
@@ -765,8 +782,7 @@ commentstyle=\color{scComm},
 
 \end{frame}
 
-\againframe{scalajsld}
-
+\againframe<6>{scalajsld}
 \againframe<1>{simplepipeline}
 
 \section*{Things I Shamelessly Omitted}
