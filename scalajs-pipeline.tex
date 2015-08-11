@@ -6,15 +6,16 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 
+%%% Source code settings
+
 \lstdefinelanguage{scala}{
-  morekeywords={abstract,case,catch,class,def,%
+  keywords={abstract,case,catch,class,def,%
     do,else,extends,false,final,finally,%
     for,if,implicit,import,match,mixin,%
     new,null,object,override,package,%
     private,protected,requires,return,sealed,%
     super,this,throw,trait,true,try,%
     type,val,var,while,with,yield},
-  otherkeywords={=>,<-,<\%,<:,>:,\#},
   sensitive=true,
   morecomment=[l]{//},
   morecomment=[n]{/*}{*/},
@@ -24,34 +25,25 @@
 }
 
 %% Colors for source highlighting
-\definecolor{scKW}  {HTML}{AA37F2}
-\definecolor{scFct} {HTML}{1010FF}
-\definecolor{scType}{HTML}{228B22}
-\definecolor{scVar} {HTML}{A45936}
-\definecolor{scComm}{HTML}{B32525}
-\definecolor{scObj} {HTML}{008D92}
-\definecolor{scStr} {HTML}{952952}
+\definecolor{scKeyword}{HTML}{AA37F2}
+\definecolor{scComment}{HTML}{228B22}
+\definecolor{scString} {HTML}{952952}
 
+%% Set colors for lstlisting
 \lstset{
 language=scala,
 basicstyle=\small\ttfamily,
 columns=flexible,
-keywordstyle=\color{scKW},
-stringstyle=\color{scStr},
+keywordstyle=\color{scKeyword},
+stringstyle=\color{scString},
 showstringspaces=false,
-commentstyle=\color{scComm},
+commentstyle=\color{scComment},
 }
 
-%% Define _s_cala commands
-\newcommand{\sK}[1]{{\color{scKW} #1}}
-\newcommand{\sF}[1]{{\color{scFct} #1}}
-\newcommand{\sV}[1]{{\color{scVar} #1}}
-\newcommand{\sT}[1]{{\color{scType} #1}}
-\newcommand{\sC}[1]{{\color{scComm} #1}}
-\newcommand{\sO}[1]{{\color{scObj} #1}}
-\newcommand{\sS}[1]{{\color{scStr} #1}}
-\newcommand{\sH}[1]{{\color{white} #1}}
-\newcommand{\sN}[1]{{\color{black} #1}}
+%% Define _s_ource commands (for manual highlighing)
+\newcommand{\sK}[1]{{\color{scKeyword} #1}}
+\newcommand{\sC}[1]{{\color{scComment} #1}}
+\newcommand{\sS}[1]{{\color{scString} #1}}
 
 %%% Icons
 
