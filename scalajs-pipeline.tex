@@ -385,17 +385,18 @@ commentstyle=\color{scComm},
 
   \pause
 
-  \begin{lstlisting}[gobble=4]
-    @JSExport
-    class MultiAlerter {
-      val msgs: HelloFactory = new HelloFactory
-      def multiAlert(n: Int): Unit = // snip
+  \begin{semiverbatim} \small
+@JSExport
+class MultiAlerter \{
+  val msgs: HelloFactory = new HelloFactory
 
-      def $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)
-    }
+  \visible<-+>{@JSExport}
+  def multiAlert(n: Int): Unit = // snip
+  \visible<+>{def $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
+\}
 
-    class HelloFactory // Unchanged
-  \end{lstlisting}
+class HelloFactory // Unchanged
+  \end{semiverbatim}
 
 \end{frame}
 
