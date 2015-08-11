@@ -352,15 +352,15 @@ terminal
 
   \begin{semiverbatim} \small
 @JSExport
-class MultiAlerter \{
-  val msgs: HelloFactory = new HelloFactory
+\sK{class} MultiAlerter \{
+  \sK{val} msgs: HelloFactory = \sK{new} HelloFactory
 
   \visible<-+>{@JSExport}
-  def multiAlert(n: Int): Unit = // snip
-  \visible<+>{def $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
+  \sK{def} multiAlert(n: Int): Unit = \sC{// snip}
+  \visible<+>{\sK{def} $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
 \}
 
-class HelloFactory // Unchanged
+\sK{class} HelloFactory \sC{// Unchanged}
   \end{semiverbatim}
 
 \end{frame}
@@ -591,17 +591,17 @@ class HelloFactory // Unchanged
   % Using semiverbatim because too many overlay interactions
   \begin{semiverbatim} \small
 \uncover<2->{@JSExport}
-\uncover<3->{class MultiAlerter \{
-  val msgs = new HelloFactory}
+\uncover<3->{\sK{class} MultiAlerter \{
+  \sK{val} msgs = \sK{new} HelloFactory}
 
   \uncover<5->{@JSExport}
-  \uncover<6->{def multiAlert(n: Int) =
-    for (i <- 1 to n) dom.alert(msgs.hello(i))}
+  \uncover<6->{\sK{def} multiAlert(n: Int) =
+    \sK{for} (i <- 1 to n) dom.alert(msgs.hello(i))}
 \uncover<3->{\}}
 
-\uncover<4->{class HelloFactory \{}
-  \uncover<7->{def hello(x: Int) = s"Hello World #$x"}
-  \uncover<8>{def helloDebug() = "Hello World"}
+\uncover<4->{\sK{class} HelloFactory \{}
+  \uncover<7->{\sK{def} hello(x: Int) = s\sS{"Hello World #$x"}}
+  \uncover<8>{def helloDebug() = \sS{"Hello World"}}
 \uncover<4->{\}}
   \end{semiverbatim}
   % $ fix syntax highlighting
@@ -627,10 +627,10 @@ class HelloFactory // Unchanged
 
 
     \begin{semiverbatim} \small \uncover<4>{
-def multiAlert__I__V(n: int) \{
-  var i: int = 0
-  while (i <[int] n) \{
-    <global>["alert"](this.msgs$1.hello__I__T(i));
+\sK{def} multiAlert__I__V(n: int) \{
+  \sK{var} i: int = 0
+  \sK{while} (i <[int] n) \{
+    <global>[\sS{"alert"}](\sK{this}.msgs$1.hello__I__T(i));
     i = i +[int] 1;
   \}
 \}}
@@ -672,10 +672,10 @@ def multiAlert__I__V(n: int) \{
     \begin{block}{Scala Code\phantom{p}}
       \vspace{-\baselineskip}
       \begin{semiverbatim} \small
-def norm(a: Int, b: String) = \{
-  val a2 = a * a
-  val b2 = \{
-    val b0 = b.toInt
+\sK{def} norm(a: Int, b: String) = \{
+  \sK{val} a2 = a * a
+  \sK{val} b2 = \{
+    \sK{val} b0 = b.toInt
     b0 * b0
   \}
   math.sqrt(a2 + b2)
@@ -689,14 +689,14 @@ def norm(a: Int, b: String) = \{
     \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
       \vspace{-\baselineskip}
       \begin{semiverbatim} \small
-var norm = function(a2, b) \{
-  \only<-2>{return }\{
-    var a2 = a * a;
-    \only<-3>{var b2 = }\{
-      var b0 = parseInt(b, 10);
-      \only<4->{var b2 = }b0 * b0;
+\sK{var} norm = \sK{function}(a2, b) \{
+  \only<-2>{\sK{return} }\{
+    \sK{var} a2 = a * a;
+    \only<-3>{\sK{var} b2 = }\{
+      \sK{var} b0 = parseInt(b, 10);
+      \only<4->{\sK{var} b2 = }b0 * b0;
     \};
-    \only<3->{return }Math.sqrt(a2 + b2);
+    \only<3->{\sK{return} }Math.sqrt(a2 + b2);
   \};
 \}      
       \end{semiverbatim}
