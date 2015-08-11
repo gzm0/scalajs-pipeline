@@ -440,74 +440,74 @@ commentstyle=\color{scComm},
 
 \againframe<6>{scalajsc}
 
-\begin{frame}<1-6>[label=sjsir]
+\begin{frame}<1-10>[fragile,label=sjsir]
   %% Used in multiple spots
-  %% Overlays 1 - 6 used here
-  %% Overlays 7 - 10 used in linker
+  %% Overlays  1 -  7 explanations
+  %% Overlays  8 - 10 Scalajsc responsibilities
+  %% Overlays 11 - 13 Scalajsld responsibilities
   \frametitle{Scala.js Compiler Output: The IR}
 
   \begin{columns}[t]
     \column{.5\textwidth}
-    \begin{block}<+->{General}
+    \begin{block}{General}
       \begin{itemize}
-      \item Typed AST form
-      \item<alert@8-10> Expressions only
-      \item<alert@4-6> JavaScript operations
+      \item<1-> AST form (typed)
+      \item<3-|alert@12-13> Expressions only
+      \item<5-|alert@8-10> JavaScript operations
       \end{itemize}
     \end{block}
 
-    \begin{block}<+->{Types}
-      \begin{itemize}
-      \item No generics
-      \item Primitive types (\texttt{int})
-      \item<alert@9-10> Class types (\texttt{foo.Bar})
-      \item<alert@10> Array types (\texttt{int[]}, \texttt{A[]})
-      \end{itemize}
-    \end{block}
-
-    \column{.5\textwidth}
-    \begin{block}<+->{Classes / Interfaces}
+    \begin{block}<7->{Classes / Interfaces}
       \begin{itemize}
       \item Single class inheritance
       \item Multi interface inheritance
-      \item Pure interfaces
-      \item No nesting
-      \item<alert@5-6> No Overloading\\
+      \item<alert@9-10> No Overloading\\
         (instead: name mangling)
-      \item<alert@6> JavaScript methods\\
+      \item<alert@10> JavaScript methods\\
         (aka Exports)
       \end{itemize}
     \end{block}
 
+    \column{.5\textwidth}
+    \begin{block}<6->{Types}
+      \begin{itemize}
+      \item No generics (erasure)
+      \item Primitive types (\texttt{int})
+      \item<alert@13> Class types (\texttt{foo.Bar})
+      \end{itemize}
+    \end{block}
+
+    \begin{overprint}
+      \onslide<2>
+      \begin{lstlisting}[gobble=8]
+        val x = "Foo"; x.charAt(1)
+
+        // Abstract Syntax Tree
+        Block(
+          ValDef("x", Literal("Foo")),
+          Apply(
+            Select(Ident("x"), "charAt"),
+            List(Literal(0))
+          )
+        )
+      \end{lstlisting}
+
+      \onslide<4>
+      \begin{lstlisting}[gobble=8]
+        val result = {
+          val helper = 1 + 2
+          helper * 2
+        }
+
+        // VS
+
+        val helper = 1 + 2
+        val result = helper * 2
+      \end{lstlisting}
+
+    \end{overprint}
+
   \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Scala.js Compiler -- \texttt{jscode}}
-  \framesubtitle{Overload name mangling}
-
-  \begin{block}{Scala Source Code}
-    \begin{lstlisting}[gobble=6]
-      class HelloFactory {
-        def hello(x: Int): String = // snip
-        def hello(): String = // snip
-        def hello(name: String): String = // snip
-      }
-    \end{lstlisting}
-  \end{block}
-
-  \pause
-
-  \begin{block}{Scala.js IR}
-    \begin{lstlisting}[gobble=6]
-      class LHelloFactory extends O {
-        def hello__I__T(x: int): T = // snip
-        def hello__T(): T = // snip
-        def hello__T__T(name: T): T = // snip
-      }
-    \end{lstlisting}
-  \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -780,8 +780,10 @@ commentstyle=\color{scComm},
     \begin{itemize}
     \item Hijacked Classes (and string IR type)
     \item Helper types (Undefined, Null, Nothing, NoType, Records)
+    \item Array types (\texttt{int[]}, \texttt{A[]})
     \item Labeled Blocks (pattern matches, tailrec methods)
     \item Modules (objects)
+    \item Class Nesting
     \end{itemize}
   \end{block}
 
