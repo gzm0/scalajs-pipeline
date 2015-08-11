@@ -701,30 +701,41 @@ def multiAlert__I__V(n: int) \{
   \frametitle{Scala.js Linker -- Emitter Phase}
   \framesubtitle{Desugaring}
 
-  \begin{block}{Scala Code\phantom{p}}
-    \begin{lstlisting}[gobble=6]
-      def norm(a: Int, b: String) = {
-        val b2 = { val b0 = b.toInt; b0 * b0 }
-        math.sqrt(a * a + b2)
-      }
-    \end{lstlisting}
-  \end{block}
+  \begin{columns}[t]
+    \column{.5\textwidth}
+    \begin{block}{Scala Code\phantom{p}}
+      \vspace{-\baselineskip}
+      \begin{semiverbatim} \small
+def norm(a: Int, b: String) = \{
+  val a2 = a * a
+  val b2 = \{
+    val b0 = b.toInt
+    b0 * b0
+  \}
+  math.sqrt(a2 + b2)
+\}
+      \end{semiverbatim}
+    \end{block}
 
-  \pause
+    \pause
 
-  \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
-    \begin{semiverbatim}
-\small{}var norm = function(a2, b) \{
+    \column{.5\textwidth}
+    \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
+      \vspace{-\baselineskip}
+      \begin{semiverbatim} \small
+var norm = function(a2, b) \{
   \only<-2>{return }\{
+    var a2 = a * a;
     \only<-3>{var b2 = }\{
-      var b0 = parseInt(b, 10)
+      var b0 = parseInt(b, 10);
       \only<4->{var b2 = }b0 * b0;
     \};
-    \only<3->{return }Math.sqrt(a * a + b2);
+    \only<3->{return }Math.sqrt(a2 + b2);
   \};
 \}      
-    \end{semiverbatim}
-  \end{block}
+      \end{semiverbatim}
+    \end{block}
+  \end{columns}
 
 \end{frame}
 
