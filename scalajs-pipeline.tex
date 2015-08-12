@@ -684,7 +684,9 @@ terminal
     \begin{block}{Scala Code\phantom{p}}
       \vspace{-\baselineskip}
       \begin{semiverbatim} \small
-\sK{def} norm(a: Int, b: String) = \{
+\sK{def} norm(a: Int,
+         b: String) = \{
+
   \sK{val} a2 = a * a
   \sK{val} b2 = \{
     \sK{val} b0 = b.toInt
@@ -701,11 +703,11 @@ terminal
     \begin{block}{\alt<5>{}{Pseudo }JavaScript Code}
       \vspace{-\baselineskip}
       \begin{semiverbatim} \small
-\sK{var} norm = \sK{function}(a, b) \{
+\sK{function} norm(a, b) \{
   \only<-2>{\sK{return} }\{
     \sK{var} a2 = a * a;
     \only<-3>{\sK{var} b2 = }\{
-      \sK{var} b0 = parseInt(b, 10);
+      \sK{var} b0 = parseInt(b);
       \only<4->{\sK{var} b2 = }b0 * b0;
     \};
     \only<3->{\sK{return} }Math.sqrt(a2 + b2);
