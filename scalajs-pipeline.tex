@@ -304,50 +304,34 @@ terminal
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Scala.js Compiler -- Example}
+  \frametitle{Scala.js Compiler -- frontend}
 
-  \begin{lstlisting}[gobble=4]
-    @JSExport
-    class MultiAlerter {
-      val msgs = new HelloFactory
+  \vspace{-\baselineskip}
+  \begin{semiverbatim} \small
+@JSExport
+\sK{class} MultiAlerter \{
+  \sK{val} msgs\only<2->{: HelloFactory} = \sK{new} HelloFactory
 
-      @JSExport
-      def multiAlert(n: Int) =
-        for (i <- 1 to n) dom.alert(msgs.hello(i))
-    }
+  @JSExport
+  \sK{def} multiAlert(n: Int)\only<2->{: Unit} = \alt<3->{\{
+    intWrapper(1).to(n).foreach[Unit] \{ (i: Int) =>
+      dom.alert(msgs.hello(i))
+    \}
+  \}}{
+    \sK{for} (i <- 1 to n) dom.alert(msgs.hello(i))
 
-    class HelloFactory {
-      def hello(x: Int) = s"Hello World #$x"
-      def helloDebug() = "Hello World"
-    }
-  \end{lstlisting}
+
+  }
+\}
+
+\sK{class} HelloFactory \{
+  \sK{def} hello(x: Int)\only<2->{: String} =
+    \alt<4->{StringContext.apply(\sS{"Hello World #"}, \sS{""}).s(x)}{s\sS{"Hello World #$x"}}
+
+  \sK{def} helloDebug()\only<2->{: String} = \sS{"Hello World"}
+\}
+  \end{semiverbatim}
   % $ fix syntax highlighting
-
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Scala.js Compiler -- After frontend}
-
-  \begin{lstlisting}[gobble=4]
-    @JSExport
-    class MultiAlerter {
-      val msgs: HelloFactory = new HelloFactory
-
-      @JSExport
-      def multiAlert(n: Int): Unit = {
-        intWrapper(1).to(n).foreach[Unit] { (i: Int) =>
-          dom.alert(msgs.hello(i))
-        }
-      }
-    }
-
-    class HelloFactory {
-      def hello(x: Int): String =
-        StringContext.apply("Hello World #", "").s(x)
-
-      def helloDebug(): String = "Hello World"
-    }
-  \end{lstlisting}
 
 \end{frame}
 
