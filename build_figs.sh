@@ -11,3 +11,6 @@ doConvert
 
 cd ../components
 doConvert
+
+cd ../
+doConvert
