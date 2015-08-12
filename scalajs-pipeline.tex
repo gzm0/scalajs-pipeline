@@ -412,8 +412,8 @@ terminal
 
 \begin{frame}<1-10>[fragile,label=sjsir]
   %% Used in multiple spots
-  %% Overlays  1 -  7 explanations
-  %% Overlays  8 - 10 Scalajsc responsibilities
+  %% Overlays  1 - 10 explanations & highlighting of
+  %%                  Scalajsc responsibilities
   %% Overlays 11 - 13 Scalajsld responsibilities
   \frametitle{Scala.js Compiler Output: The IR}
 
@@ -423,11 +423,11 @@ terminal
       \begin{itemize}
       \item<1-> AST form (typed)
       \item<3-|alert@12-13> Expressions only
-      \item<5-|alert@8-10> JavaScript operations
+      \item<5-|alert@6-10> JavaScript operations
       \end{itemize}
     \end{block}
 
-    \begin{block}<7->{Classes / Interfaces}
+    \begin{block}<8->{Classes / Interfaces}
       \begin{itemize}
       \item Single class inheritance
       \item Multi interface inheritance
@@ -439,7 +439,7 @@ terminal
     \end{block}
 
     \column{.5\textwidth}
-    \begin{block}<6->{Types}
+    \begin{block}<7->{Types}
       \begin{itemize}
       \item No generics (erasure)
       \item Primitive types (\texttt{int})
