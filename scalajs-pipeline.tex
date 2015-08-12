@@ -80,6 +80,11 @@ commentstyle=\color{scComment},
 %% Overlay aware commands
 \newcommand<>{\alertDraw}{\alt#1{\draw[draw=red]}{\draw}}
 
+%% Centering command
+\newcommand{\vcentered}[1]{\begingroup
+\setbox0=\hbox{#1}%
+\parbox{\wd0}{\box0}\endgroup}
+
 %%% Beamer specific settings
 
 \setbeamercovered{transparent}
@@ -792,22 +797,18 @@ HelloFactory.prototype.hello__I__T = function(x) {
 \begin{frame}
   \frametitle{Questions}
 
-  \vspace{3\baselineskip}
+  \vspace{5\baselineskip}
 
   {\Huge ¿Questions?}
 
-  \vspace{3.5\baselineskip}
+  \vspace{5\baselineskip}
 
   Tobias Schlatter -- @gzm0 on GitHub / Gitter\\
   \url{https://gitter.im/scala-js/scala-js}\\
 
-  \vspace{2\baselineskip}
+  \vspace{3\baselineskip}
 
-  {\footnotesize Icons derived from the GNOME Tango icons}
-
-  \vspace{\baselineskip}
-
-  \includegraphics[height=1em]{icons/cc-by-sa}
+  \vcentered{\includegraphics[height=1em]{icons/cc-by-sa}} \quad {\footnotesize Icons derived from the GNOME Tango icons}
 \end{frame}
 
 \end{document}
