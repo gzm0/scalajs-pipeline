@@ -744,21 +744,29 @@ HelloFactory.prototype.hello__I__T = function(x) {
 \begin{frame}
   \frametitle{Things I Shamelessly Omitted}
 
-  \begin{block}{Scala.js IR}
-    \begin{itemize}
-    \item Hijacked Classes (and \texttt{string} type)
-    \item Types \texttt{Undefined}, \texttt{Null}, \texttt{Nothing},
-      \texttt{NoType}, \texttt{Record}
-    \item Array types (\texttt{int[]}, \texttt{A[]})
-    \item Labeled Blocks (pattern matches, tailrec methods)
-    \item Modules (objects)
-    \end{itemize}
-  \end{block}
-
-  \vspace{-\baselineskip}
-
   \begin{columns}[t]
-    \column{.4\textwidth}
+    \column{.5\textwidth}
+    \begin{block}{Scala.js IR}
+      \begin{itemize}
+      \item Hijacked Classes
+      \item Additional Types
+        \begin{itemize}
+        \item \texttt{String}
+        \item \texttt{Undefined}, \texttt{Null},
+          \texttt{Nothing}, \texttt{NoType}
+        \item Array types (\texttt{int[]}, \texttt{A[]})
+        \item Record types
+        \end{itemize}
+      \item Labeled Blocks
+        \begin{itemize}
+        \item Pattern Matches
+        \item Tailrec Methods
+        \end{itemize}
+      \item Modules (objects)
+      \end{itemize}
+    \end{block}
+
+    \column{.5\textwidth}
     \begin{block}{Compiler}
       \begin{itemize}
       \item \texttt{scala.Enumeration}
@@ -768,7 +776,6 @@ HelloFactory.prototype.hello__I__T = function(x) {
       \end{itemize}
     \end{block}
 
-    \column{.5\textwidth}
     \begin{block}{Linker}
       \begin{itemize}
       \item Instance tests
