@@ -356,9 +356,9 @@ terminal
 \sK{class} MultiAlerter \{
   \sK{val} msgs: HelloFactory = \sK{new} HelloFactory
 
-  \visible<-+>{@JSExport}
+  @JSExport
   \sK{def} multiAlert(n: Int): Unit = \sC{// snip}
-  \visible<+>{\sK{def} $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
+  \uncover<1,3>{\sK{def} $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
 \}
 
 \sK{class} HelloFactory \sC{// Unchanged}
@@ -403,7 +403,7 @@ terminal
   %% Used in multiple spots
   %% Overlays  1 - 10 explanations & highlighting of
   %%                  Scalajsc responsibilities
-  %% Overlays 11 - 13 Scalajsld responsibilities
+  %% Overlays 11 - 12 Scalajsld responsibilities
   \frametitle{Scala.js Compiler Output: The IR}
 
   \begin{columns}[t]
@@ -411,7 +411,7 @@ terminal
     \begin{block}{General}
       \begin{itemize}
       \item<1-> AST form (typed)
-      \item<3-|alert@12-13> Expressions only
+      \item<3-|alert@12-13> Complex expressions
       \item<5-|alert@6-10> JavaScript operations
       \end{itemize}
     \end{block}
@@ -432,7 +432,7 @@ terminal
       \begin{itemize}
       \item No generics (erasure)
       \item Primitive types (\texttt{int})
-      \item<alert@13> Class types (\texttt{foo.Bar})
+      \item Class types (\texttt{foo.Bar})
       \end{itemize}
     \end{block}
 
@@ -520,12 +520,15 @@ terminal
 
   \begin{block}{Scala.js IR}
     \begin{lstlisting}[gobble=6]
+      def $$js$exported$meth$multiAlert__I__O(n: int): any = {
+        this.multiAlert__I__V(n);
+      }
+
       def "multiAlert"(arg0: any): any = {
         val prep0: int = arg0.asInstanceOf[I];
         this.$$js$exported$meth$multiAlert__I__O(prep0)
       }
     \end{lstlisting}
-    % $ fix syntax highlighting
   \end{block}
 
 \end{frame}
@@ -630,7 +633,7 @@ terminal
     \begin{semiverbatim} \small \uncover<4>{
 \sK{def} multiAlert__I__V(n: int) \{
   \sK{var} i: int = 0
-  \sK{while} (i <[int] n) \{
+  \sK{while} (i <=[int] n) \{
     <global>[\sS{"alert"}](\sK{this}.msgs$1.hello__I__T(i));
     i = i +[int] 1;
   \}
@@ -660,7 +663,7 @@ terminal
 
 \againframe<4-5>{scalajsld}
 
-\againframe<11-13>{sjsir}
+\againframe<11-12>{sjsir}
 
 \subsection{Emitter Phase}
 
@@ -720,7 +723,7 @@ var MultiAlerter = function() {
 };
 MultiAlerter.prototype.multiAlert__I__V = function(n) {
   var i = 0;
-  while (i < n) {
+  while (i <= n) {
     alert(this.msgs$1.hello__I__T(i));
     i = i + 1;
   }
@@ -743,8 +746,9 @@ HelloFactory.prototype.hello__I__T = function(x) {
 
   \begin{block}{Scala.js IR}
     \begin{itemize}
-    \item Hijacked Classes (and string IR type)
-    \item Helper types (Undefined, Null, Nothing, NoType, Records)
+    \item Hijacked Classes (and \texttt{string} type)
+    \item Types \texttt{Undefined}, \texttt{Null}, \texttt{Nothing},
+      \texttt{NoType}, \texttt{Record}
     \item Array types (\texttt{int[]}, \texttt{A[]})
     \item Labeled Blocks (pattern matches, tailrec methods)
     \item Modules (objects)
@@ -769,8 +773,7 @@ HelloFactory.prototype.hello__I__T = function(x) {
       \begin{itemize}
       \item Instance tests
       \item Longs
-      \item Class emission order
-      \item JS Ctors \& Inheritance
+      \item Inheritance in JavaScript
       \item Semantics / Output modes
       \end{itemize}
     \end{block}
