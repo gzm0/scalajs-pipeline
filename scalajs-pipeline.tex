@@ -78,7 +78,7 @@ commentstyle=\color{scComment},
 %%% Misc
 
 %% Overlay aware commands
-\newcommand<>{\alertDraw}{\alt#1{\draw[draw=red]}{\draw}}
+\newcommand<>{\alertPhase}{\alt#1{\node[phase,fill=black!5!blue!20]}{\node[phase]}}
 
 %% Centering command
 \newcommand{\vcentered}[1]{\begingroup
@@ -298,14 +298,14 @@ terminal
       \node[label=below:app.scala] (scala) at (1,4) {\scalaFiles};
       \node[label=below:lib.class] (inclass) at (7,4) {\classFiles};
 
-      \node[phase] (frontend) at (4, 4) {frontend};
+      \alertPhase<3> (frontend) at (4, 4) {frontend};
 
-      \node[phase] (jsinterop) at (4, 2.5) {\texttt{jsinterop}};
+      \alertPhase<4> (jsinterop) at (4, 2.5) {\texttt{jsinterop}};
       \node<2-> at (2.9, 2.8) {\scalajsld[0.35]};
 
-      \node[phase] (scalac) at (4, 1) {backend};
+      \alertPhase<5> (scalac) at (4, 1) {backend};
 
-      \node[phase] (jscode) at (1, 0) {\texttt{jscode}};
+      \alertPhase<6> (jscode) at (1, 0) {\texttt{jscode}};
       \node<2-> at (-.1, 0.3) {\scalajsld[0.35]};
 
       \node[phase] (jvm) at (7, 0) {\texttt{jvm}};
@@ -313,13 +313,13 @@ terminal
       \node[label=below:app.sjsir] (sjsir) at (1, -1.5) {\sjsirFiles};
       \node[label=below:app.class] (class) at (7, -1.5) {\classFiles};
 
-      \alertDraw<3> (scala) -- (frontend);
+      \draw (scala) -- (frontend);
       \draw[dashed] (inclass) -- (frontend);
-      \alertDraw<4> (frontend) -- (jsinterop);
-      \alertDraw<5> (jsinterop) -- (scalac);
-      \alertDraw<6> (scalac) -- (jscode);
+      \draw (frontend) -- (jsinterop);
+      \draw (jsinterop) -- (scalac);
+      \draw (scalac) -- (jscode);
       \draw (scalac) -- (jvm);
-      \alertDraw<7> (jscode) -- (sjsir);
+      \draw (jscode) -- (sjsir);
       \draw (jvm) -- (class);
     \end{tikzpicture}
   \end{center}
@@ -418,7 +418,7 @@ terminal
 
 \subsection{\texttt{jscode} Phase}
 
-\againframe<6>{scalajsc}
+\againframe<5-6>{scalajsc}
 
 \begin{frame}<1-10>[fragile,label=sjsir]
   %% Used in multiple spots
@@ -578,13 +578,13 @@ terminal
 
       \node (sjsir) at (0, 6) {\sjsirFiles};
 
-      \node[phase] (linker) at (3, 6) {Linker};
+      \alertPhase<2> (linker) at (3, 6) {Linker};
 
       \node[phase,dashed] (irchecker) at (5.5, 5) {IR Checker};
 
-      \node[phase] (optimizer) at (3, 4.5) {Optimizer};
-      \node[phase] (refiner) at (3, 3) {Refiner};
-      \node[phase] (emitter) at (3, 1.5) {Emitter};
+      \alertPhase<3> (optimizer) at (3, 4.5) {Optimizer};
+      \alertPhase<4> (refiner) at (3, 3) {Refiner};
+      \alertPhase<5> (emitter) at (3, 1.5) {Emitter};
 
       \node[phase,dashed] (closure) at (3, 0) {Closure};
 
@@ -592,11 +592,11 @@ terminal
       \node (fullopt) at (7,0) {\jsFile[0.6]};
 
       \draw[dashed] (linker) to [out=-90,in=180,right] (irchecker);
-      \alertDraw<2> (sjsir) -- (linker);
-      \alertDraw<3> (linker) -- (optimizer);
-      \alertDraw<4> (optimizer) -- (refiner);
-      \alertDraw<5> (refiner) -- (emitter);
-      \alertDraw<6> (emitter) -- node[above] {fastOpt} (fastopt);
+      \draw (sjsir) -- (linker);
+      \draw (linker) -- (optimizer);
+      \draw (optimizer) -- (refiner);
+      \draw (refiner) -- (emitter);
+      \draw (emitter) -- node[above] {fastOpt} (fastopt);
 
       \draw[dashed] (emitter) -- (closure);
       \draw[dashed] (closure) -- node[above] {fullOpt} (fullopt);
