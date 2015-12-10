@@ -178,54 +178,55 @@ commentstyle=\color{scComment},
       % Top pipeline
       \node[label=below:app.scala] (scala1) at (0,5) {\scalaFiles};
       \node (scalajsc1) at (2.5,5) {\scalajsc};
-      \node<1>[label=below:app.sjsir] (sjsir1) at (5.5,5) {\sjsirFiles};
-      \node<2-3>[label=below:app.sjsir] (sjsir1) at (5.5,4.5) {\sjsirFiles};
-      \node<2-3>[label=app.class] (class1) at (5.5,5.9) {\classFiles};
-      \node<4->[label=below:app.jar] (jar1) at (5.5,5) {\sjsirclassFiles};
-      \node<4-> at (5,5.7) {\packageIcon};
+      \node<1-2>[label=below:app.sjsir] (sjsir1) at (5.5,5) {\sjsirFiles};
+      \node<3-4>[label=below:app.sjsir] (sjsir1) at (5.5,4.5) {\sjsirFiles};
+      \node<3-4>[label=app.class] (class1) at (5.5,5.9) {\classFiles};
+      \node<5->[label=below:app.jar] (jar1) at (5.5,5) {\sjsirclassFiles};
+      \node<5-> at (5,5.7) {\packageIcon};
 
       \draw (scala1) -- (scalajsc1);
-      \draw<-3> (scalajsc1) -- (sjsir1);
-      \draw<2-3> (scalajsc1) -- (class1);
-      \draw<4-> (scalajsc1) -- (jar1);
+      \draw<-4> (scalajsc1) -- (sjsir1);
+      \draw<3-4> (scalajsc1) -- (class1);
+      \draw<5-> (scalajsc1) -- (jar1);
 
       % Bottom pipeline
-      \node<1-4,7>[label=below:lib.scala] (scala2) at (0,.5) {\scalaFiles};
-      \node<1-4,7> (scalajsc2) at (2.5,.5) {\scalajsc};
-      \node<1>[label=below:lib.sjsir] (sjsir2) at (5.5,.5) {\sjsirFiles};
-      \node<2-3>[label=below:lib.sjsir] (sjsir2) at (5.5,0) {\sjsirFiles};
-      \node<2-3>[label=lib.class] (class2) at (5.5,1.4) {\classFiles};
-      \node<4->[label=below:lib.jar] (jar2) at (5.5,.5) {\sjsirclassFiles};
-      \node<4-> (p2) at (5,1.2) {\packageIcon};
+      \node<1-5,8>[label=below:lib.scala] (scala2) at (0,.5) {\scalaFiles};
+      \node<1-5,8> (scalajsc2) at (2.5,.5) {\scalajsc};
+      \node<1-2>[label=below:lib.sjsir] (sjsir2) at (5.5,.5) {\sjsirFiles};
+      \node<3-4>[label=below:lib.sjsir] (sjsir2) at (5.5,0) {\sjsirFiles};
+      \node<3-4>[label=lib.class] (class2) at (5.5,1.4) {\classFiles};
+      \node<5->[label=below:lib.jar] (jar2) at (5.5,.5) {\sjsirclassFiles};
+      \node<5-> (p2) at (5,1.2) {\packageIcon};
 
-      \draw<1-4,7> (scala2) -- (scalajsc2);
-      \draw<-3> (scalajsc2) -- (sjsir2);
-      \draw<2-3> (scalajsc2) -- (class2);
-      \draw<4,7> (scalajsc2) -- (jar2);
+      \draw<1-5,8> (scala2) -- (scalajsc2);
+      \draw<-4> (scalajsc2) -- (sjsir2);
+      \draw<3-4> (scalajsc2) -- (class2);
+      \draw<5,8> (scalajsc2) -- (jar2);
 
       % Linker and JS file
       \node (scalajsld) at (9,2.75) {\scalajsld};
       \node (js) at (12,2.75) {\jsFile};
 
-      \draw<-3> (sjsir1) -- (scalajsld);
-      \draw<4-> (jar1) -- (scalajsld);
+      \draw<-4> (sjsir1) -- (scalajsld);
+      \draw<5-> (jar1) -- (scalajsld);
 
-      \draw<-3> (sjsir2) -- (scalajsld);
-      \draw<4-> (jar2) -- (scalajsld);
+      \draw<-4> (sjsir2) -- (scalajsld);
+      \draw<5-> (jar2) -- (scalajsld);
 
       \draw (scalajsld) -- (js);
 
       % Compilation symbols
-      \draw<3> (class2) -- (scalajsc1);
-      \draw<4,7> (p2) -- (scalajsc1);
+      \draw<2>[dashed] (sjsir2) -- (scalajsc1);
+      \draw<4> (class2) -- (scalajsc1);
+      \draw<5,8> (p2) -- (scalajsc1);
 
       % Wrong Jar
-      \node<5-6>[label=below:lib2.jar] (jar3) at (2.5,.5) {\sjsirclassFiles};
-      \node<5-6> at (2, 1.2) {\packageIcon};
-      \draw<5-6> (class3) -- (scalac1);
+      \node<6-7>[label=below:lib2.jar] (jar3) at (2.5,.5) {\sjsirclassFiles};
+      \node<6-7> at (2, 1.2) {\packageIcon};
+      \draw<6-7> (class3) -- (scalac1);
 
       % Linkage Error
-      \node<6>[text width=3cm] at (10.5,4.5) {At link time: \texttt{MissingClass}};
+      \node<7>[text width=3cm] at (10.5,4.5) {At link time: \texttt{MissingClass}};
 
     \end{tikzpicture}
   \end{center}
@@ -555,7 +556,7 @@ terminal
 \end{frame}
 
 \againframe<7>{scalajsc}
-\againframe<4>{scalajspipeline}
+\againframe<5>{scalajspipeline}
 
 \section{Scala.js Linker}
 
