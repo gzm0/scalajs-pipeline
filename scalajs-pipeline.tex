@@ -90,8 +90,17 @@ commentstyle=\color{scComment},
 \setbeamercovered{transparent}
 \setbeamertemplate{navigation symbols}
 
-% Frame number on page
-\setbeamertemplate{footline}{\makebox[0.98\paperwidth][r]{\large \raisebox{1.2ex}{\insertframenumber}}}
+% Frame number on page & translation box
+\setbeamertemplate{footline}{
+  \parbox{\paperwidth}{
+    \makebox[0.98\paperwidth][r]{\raisebox{1.2ex}{\large \insertframenumber}}\\
+    \colorbox{black}{
+      \parbox{\paperwidth}{
+        \Large\color{black}Line 1\\Line 2
+      }
+    }
+  }
+}
 
 \title{The Scala.js Compilation Pipeline}
 \author{Tobias Schlatter}
@@ -127,7 +136,7 @@ commentstyle=\color{scComment},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,0) rectangle (10,6);
+      \useasboundingbox (0,0) rectangle (10,5.75);
 
       % Top pipeline
       \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
@@ -168,7 +177,7 @@ commentstyle=\color{scComment},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,0) rectangle (10,6);
+      \useasboundingbox (0,0) rectangle (10,5.75);
 
       % Top pipeline
       \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
@@ -394,7 +403,6 @@ terminal
       }
       def $js$exported$meth$multiAlert(n: Int): Object = // snip
     }
-
     class HelloFactory {
       def hello(x: Int): String = {
         new StringContext(wrapRefArray(Array{"Hello World #", ""}))
@@ -447,6 +455,7 @@ terminal
       \end{itemize}
     \end{block}
 
+    \vspace{-1.1\baselineskip}
     \begin{overprint}
       \onslide<2>
       \begin{lstlisting}[gobble=8]
