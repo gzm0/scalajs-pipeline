@@ -1,0 +1,139 @@
+The Scala.js Compilation Pipeline
+Tobias Schlatter
+August 15, 2015
+
+
+The Scala.js Compilation Pipeline
+Tobias Schlatter - @gzm0
+
+A View From Above
+
+  Scala JVM Pipeline
+
+  At run time: NoClassDefFoundError
+
+  Scala.js Pipeline
+
+  At link time: MissingClass;
+
+
+Scala.js Compiler
+
+  Phases of the Scala.js Compiler
+
+  Phases of the Scala.js Compiler
+
+  frontend
+  backend
+
+  Scala.js Compiler - frontend
+
+jsinterop Phase
+
+  Scala.js Compiler - jsinterop
+
+  Responsibilities
+
+    JavaScript Interoperability Errors
+    Exports / JavaScript Methods
+
+    // snip
+
+  Scala.js Compiler - After backend
+
+jscode Phase
+
+  Scala.js Compiler Output: The IR
+
+    General
+
+      AST form (typed)
+      Complex expressions
+      JavaScript operations
+
+    Classes / Interfaces
+
+      Single class inheritance
+      Multi interface inheritance
+      No Overloading
+      (instead: name mangling)
+      JavaScript methods
+      (aka Exports)
+
+    Types
+
+      No generics (erasure)
+      Primitive types (int)
+      Class types (foo.Bar)
+
+      // Abstract Syntax Tree
+
+      // VS
+
+  Scala.js Compiler - jscode
+
+  Calling JavaScript
+
+    Scala Source Code
+    Scala.js IR
+
+  Scala.js Compiler - jscode
+
+    Method Exports
+    Scala Code after jsinterop
+    Scala.js IR
+
+scalajsld
+
+  Scala.js Linker - Optimizer Phase
+
+  Emitter Phase
+
+  Scala.js Linker - Emitter Phase
+
+  Desugaring
+
+  Scala Code
+  Pseudo JavaScript Code
+  JavaScript Code
+
+  Final JavaScript (simplified)
+
+Conclusion
+
+Things I Shamelessly Omitted
+
+    Scala.js IR
+
+      Hijacked Classes
+      Scala.js defined JS classes
+      Additional Types
+
+        String
+        Array types (int[], A[])
+        Record types
+              Labeled Blocks
+
+        Pattern Matches
+        Tailrec Methods
+              Modules (objects)
+
+    Compiler
+
+      scala.Enumeration
+      Reflective Calls
+      Function literals
+      Export overloading
+
+    Linker
+
+      Instance tests
+      Longs
+      Inheritance in JavaScript
+      Semantics / Output modes
+
+  Questions
+
+  Tobias Schlatter - @gzm0 on GitHub / Gitter
+
+  Icons derived from the GNOME Tango icons
