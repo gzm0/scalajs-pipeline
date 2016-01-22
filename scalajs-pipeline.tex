@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=1610]{beamer}
 
 \usepackage[utf8]{inputenc}
 
@@ -116,8 +116,8 @@ commentstyle=\color{scComment},
 
     \begin{tikzpicture}[->,thick]
       \node (scala) at (0,0) {\scalaFiles[1.2]};
-      \node (js) at (8,0) {\jsFile[1.2]};
-      \node (scalajs) at (4,0) {\scalajsld[1.5]};
+      \node (js) at (10,0) {\jsFile[1.2]};
+      \node (scalajs) at (5,0) {\scalajsld[1.5]};
 
       \draw (scala) -- (scalajs);
       \draw (scalajs) -- (js);
@@ -136,28 +136,28 @@ commentstyle=\color{scComment},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,0) rectangle (10,5.75);
+      \useasboundingbox (0,0) rectangle (12,6);
 
       % Top pipeline
-      \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
-      \node (scalac1) at (2.5,4.5) {\scalac};
-      \node[label=below:app.\alt<2->{jar}{class}] (class1) at (5.5,4.5) {\classFiles};
-      \node<2-> at (5,5.2) {\packageIcon};
+      \node[label=below:app.scala] (scala1) at (0,5) {\scalaFiles};
+      \node (scalac1) at (2.5,5) {\scalac};
+      \node[label=below:app.\alt<2->{jar}{class}] (class1) at (5.5,5) {\classFiles};
+      \node<2-> at (5,5.7) {\packageIcon};
 
       \draw (scala1) -- (scalac1);
       \draw (scalac1) -- (class1);
 
       % Bottom pipeline
-      \node<3->[label=below:lib.scala] (scala2) at (0,0) {\scalaFiles};
-      \node<3-> (scalac2) at (2.5,0) {\scalac};
-      \node<3->[label=below:lib.jar] (class2) at (5.5,0) {\classFiles};
-      \node<3-> (jar2) at (5, .6) {\packageIcon};
+      \node<3->[label=below:lib.scala] (scala2) at (0,.5) {\scalaFiles};
+      \node<3-> (scalac2) at (2.5,.5) {\scalac};
+      \node<3->[label=below:lib.jar] (class2) at (5.5,.5) {\classFiles};
+      \node<3-> (jar2) at (5, 1.2) {\packageIcon};
 
       \draw<3-> (scala2) -- (scalac2);
       \draw<3-> (scalac2) -- (class2);
 
       % JVM and inputs
-      \node (jvm) at (9,2.25) {\javaVM};
+      \node (jvm) at (9,2.75) {\javaVM};
 
       \draw (class1) -- (jvm);
       \draw<3-4,7> (class2) -- (jvm);
@@ -166,7 +166,7 @@ commentstyle=\color{scComment},
       \draw<4-> (jar2) -- (scalac1);
 
       % Linkage Error
-      \node<6>[text width=3cm] at (8.5,0.5) {At run time: \texttt{NoClassDefFoundError}};
+      \node<6>[text width=3cm] at (10.5,4.5) {At run time: \texttt{NoClassDefFoundError}};
 
     \end{tikzpicture}
   \end{center}
@@ -177,15 +177,16 @@ commentstyle=\color{scComment},
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
-      \useasboundingbox (0,0) rectangle (10,5.75);
+      \useasboundingbox (0,0) rectangle (12,6);
 
       % Top pipeline
-      \node[label=below:app.scala] (scala1) at (0,4.5) {\scalaFiles};
-      \node (scalajsc1) at (2.5,4.5) {\scalajsc};
-      \node<-4>[label=below:app.sjsir] (sjsir1) at (5.5,4.5) {\sjsirFiles};
+      \node[label=below:app.scala] (scala1) at (0,5) {\scalaFiles};
+      \node (scalajsc1) at (2.5,5) {\scalajsc};
+      \node<1-2>[label=below:app.sjsir] (sjsir1) at (5.5,5) {\sjsirFiles};
+      \node<3-4>[label=below:app.sjsir] (sjsir1) at (5.5,4.5) {\sjsirFiles};
       \node<3-4>[label=app.class] (class1) at (5.5,5.9) {\classFiles};
-      \node<5->[label=below:app.jar] (jar1) at (5.5,4.5) {\sjsirclassFiles};
-      \node<5-> at (5,5.2) {\packageIcon};
+      \node<5->[label=below:app.jar] (jar1) at (5.5,5) {\sjsirclassFiles};
+      \node<5-> at (5,5.7) {\packageIcon};
 
       \draw (scala1) -- (scalajsc1);
       \draw<-4> (scalajsc1) -- (sjsir1);
@@ -193,12 +194,13 @@ commentstyle=\color{scComment},
       \draw<5-> (scalajsc1) -- (jar1);
 
       % Bottom pipeline
-      \node[label=below:lib.scala] (scala2) at (0,0) {\scalaFiles};
-      \node (scalajsc2) at (2.5,0) {\scalajsc};
-      \node<-4>[label=below:lib.sjsir] (sjsir2) at (5.5,0) {\sjsirFiles};
+      \node[label=below:lib.scala] (scala2) at (0,.5) {\scalaFiles};
+      \node (scalajsc2) at (2.5,.5) {\scalajsc};
+      \node<1-2>[label=below:lib.sjsir] (sjsir2) at (5.5,.5) {\sjsirFiles};
+      \node<3-4>[label=below:lib.sjsir] (sjsir2) at (5.5,0) {\sjsirFiles};
       \node<3-4>[label=lib.class] (class2) at (5.5,1.4) {\classFiles};
-      \node<5->[label=below:lib.jar] (jar2) at (5.5,0) {\sjsirclassFiles};
-      \node<5-> (p2) at (5,.6) {\packageIcon};
+      \node<5->[label=below:lib.jar] (jar2) at (5.5,.5) {\sjsirclassFiles};
+      \node<5-> (p2) at (5,1.2) {\packageIcon};
 
       \draw (scala2) -- (scalajsc2);
       \draw<-4> (scalajsc2) -- (sjsir2);
@@ -206,8 +208,8 @@ commentstyle=\color{scComment},
       \draw<5-> (scalajsc2) -- (jar2);
 
       % Linker and JS file
-      \node (scalajsld) at (9,2.25) {\scalajsld};
-      \node<1-6,8-> (js) at (9,0) {\jsFile};
+      \node (scalajsld) at (9,2.75) {\scalajsld};
+      \node (js) at (12,2.75) {\jsFile};
 
       \draw<-4> (sjsir1) -- (scalajsld);
       \draw<5-> (jar1) -- (scalajsld);
@@ -215,7 +217,7 @@ commentstyle=\color{scComment},
       \draw<-4> (sjsir2) -- (scalajsld);
       \draw<5,8> (jar2) -- (scalajsld);
 
-      \draw<1-6,8-> (scalajsld) -- (js);
+      \draw (scalajsld) -- (js);
 
       % Compilation symbols
       \draw<2>[dashed] (sjsir2) -- (scalajsc1);
@@ -223,7 +225,7 @@ commentstyle=\color{scComment},
       \draw<5-> (p2) -- (scalajsc1);
 
       % Linkage Error
-      \node<7>[text width=3cm] at (9.3,0.5) {At link time: \texttt{MissingClass}};
+      \node<7>[text width=3cm] at (10.5,4.5) {At link time: \texttt{MissingClass}};
 
     \end{tikzpicture}
   \end{center}
@@ -377,8 +379,7 @@ terminal
 
   @JSExport
   \sK{def} multiAlert(n: Int): Unit = \sC{// snip}
-  \uncover<1,3>{\sK{def} $js$exported$meth$multiAlert(n: Int): Any =
-    multiAlert(n)}
+  \uncover<1,3>{\sK{def} $js$exported$meth$multiAlert(n: Int): Any = multiAlert(n)}
 \}
 
 \sK{class} HelloFactory \sC{// Unchanged}
@@ -392,7 +393,6 @@ terminal
   \frametitle{Scala.js Compiler -- After backend}
 
   \begin{lstlisting}[gobble=4]
-    @JSExport
     class MultiAlerter {
       val msgs: HelloFactory = _
       def <init>(): MultiAlerter = { msgs = new HelloFactory }
@@ -696,9 +696,7 @@ terminal
     \begin{block}{Scala Code\phantom{p}}
       \vspace{-\baselineskip}
       \begin{semiverbatim} \small
-\sK{def} norm(a: Int,
-         b: String) = \{
-
+\sK{def} norm(a: Int, b: String) = \{
   \sK{val} a2 = a * a
   \sK{val} b2 = \{
     \sK{val} b0 = b.toInt
@@ -812,16 +810,16 @@ HelloFactory.prototype.hello__I__T = function(x) {
 \begin{frame}
   \frametitle{Questions}
 
-  \vspace{5\baselineskip}
+  \vspace{4\baselineskip}
 
   {\Huge ¿Questions?}
 
-  \vspace{5\baselineskip}
+  \vspace{4\baselineskip}
 
   Tobias Schlatter -- @gzm0 on GitHub / Gitter\\
   \url{https://gitter.im/scala-js/scala-js}\\
 
-  \vspace{3\baselineskip}
+  \vspace{2\baselineskip}
 
   \vcentered{\includegraphics[height=1em]{icons/cc-by-sa}} \quad {\footnotesize Icons derived from the GNOME Tango icons}
 \end{frame}
