@@ -2,6 +2,8 @@
 
 \usepackage[utf8]{inputenc}
 
+\usepackage{CJK}
+\usepackage[absolute,overlay]{textpos}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -90,17 +92,27 @@ commentstyle=\color{scComment},
 \setbeamercovered{transparent}
 \setbeamertemplate{navigation symbols}
 
-% Frame number on page & translation box
-\setbeamertemplate{footline}{
-  \parbox{\paperwidth}{
-    \makebox[0.98\paperwidth][r]{\raisebox{1.2ex}{\large \insertframenumber}}\\
-    \colorbox{black}{
-      \parbox{\paperwidth}{
-        \Large\color{black}Line 1\\Line 2
-      }
+% Frame number on page
+\setbeamertemplate{footline}{\makebox[0.99\paperwidth][r]{%
+    \large\raisebox{4ex}{\insertframenumber}}}
+
+%% Define command for subtitles
+\TPGrid{1}{1}
+\newcommand<>{\subtitles}[1]{%
+  \begin{textblock}{1}[0,1](0,1)
+    \only#2{
+      \begin{beamercolorbox}[ht=1.6em,leftskip=.7ex]{subtitles}
+        \begin{CJK}{UTF8}{min}#1\end{CJK}
+        \vspace{.3em}
+      \end{beamercolorbox}
     }
-  }
+  \end{textblock}
 }
+
+\newcommand<>{\nosubtitles}{\subtitles#1{\color{black}Pesudo Subtitle}}
+\newcommand{\subsep}{\quad---\quad}
+
+\setbeamercolor{subtitles}{fg=white,bg=black}
 
 \title{The Scala.js Compilation Pipeline}
 \author{Tobias Schlatter}
@@ -109,6 +121,8 @@ commentstyle=\color{scComment},
 \begin{document}
 
 \begin{frame}[label=simplepipeline]
+  \nosubtitles
+
   \begin{center}
     \visible<2>{\Large The Scala.js Compilation Pipeline}
 
@@ -133,6 +147,8 @@ commentstyle=\color{scComment},
 
 \begin{frame}
   \frametitle{Scala JVM Pipeline}
+
+  \nosubtitles
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
@@ -174,6 +190,8 @@ commentstyle=\color{scComment},
 
 \begin{frame}[label=scalajspipeline]
   \frametitle{Scala.js Pipeline}
+
+  \nosubtitles
 
   \begin{center}
     \begin{tikzpicture}[->,thick]
@@ -236,6 +254,8 @@ commentstyle=\color{scComment},
 \begin{frame}[fragile]
   \frametitle{Phases of the Scala.js Compiler}
 
+  \subtitles{Scala.js コンパイラのフェーズ一覧}
+
   \begin{columns}[t]
     \column{.5\textwidth}
     \begin{semiverbatim}
@@ -282,6 +302,8 @@ terminal
 
   \frametitle{Phases of the Scala.js Compiler}
 
+  \nosubtitles
+
   \begin{center}
     \begin{tikzpicture}[->,thick,
       phase/.style={
@@ -327,7 +349,8 @@ terminal
 \begin{frame}[fragile]
   \frametitle{Scala.js Compiler -- frontend}
 
-  \vspace{-\baselineskip}
+  \nosubtitles
+
   \begin{semiverbatim} \small
 @JSExport
 \sK{class} MultiAlerter \{
@@ -363,6 +386,8 @@ terminal
 \begin{frame}[fragile]
   \frametitle{Scala.js Compiler -- \texttt{jsinterop}}
 
+  \subtitles{jsinterop の責務 \subsep JavaScript 互換なエラー処理、エキスポート}
+
   \begin{block}{Responsibilities}
     \begin{itemize}
     \item JavaScript Interoperability Errors
@@ -372,6 +397,7 @@ terminal
 
   \pause
 
+  \vspace{-\baselineskip}
   \begin{semiverbatim} \small
 @JSExport
 \sK{class} MultiAlerter \{
@@ -384,6 +410,7 @@ terminal
 
 \sK{class} HelloFactory \sC{// Unchanged}
   \end{semiverbatim}
+  \vspace{-\baselineskip}
 
 \end{frame}
 
@@ -391,6 +418,8 @@ terminal
 
 \begin{frame}[fragile]
   \frametitle{Scala.js Compiler -- After backend}
+
+  \nosubtitles
 
   \begin{lstlisting}[gobble=4]
     class MultiAlerter {
@@ -424,6 +453,15 @@ terminal
   %%                  Scalajsc responsibilities
   %% Overlays 11 - 12 Scalajsld responsibilities
   \frametitle{Scala.js Compiler Output: The IR}
+
+  \subtitles<1-2>{Scala.js コンパイラが出力する中間表現 (IR) \subsep 型付きの抽象構文木 (AST) 記法}
+  \subtitles<3-4>{複雑な式}
+  \subtitles<5-6>{JavaScript 操作}
+  \subtitles<7>{ジェネリクスの消去、プリミティブ型、クラス型}
+  \nosubtitles<8>
+  \subtitles<9>{オーバーロードの代わりに名前修飾を使う}
+  \subtitles<10>{JavaScript メソッド（エクスポート）}
+  \nosubtitles<11->
 
   \begin{columns}[t]
     \column{.5\textwidth}
@@ -493,6 +531,8 @@ terminal
   \frametitle{Scala.js Compiler -- \texttt{jscode}}
   \framesubtitle{Calling JavaScript}
 
+  \subtitles<1-2>{JavaScript を呼び出す Scala のソースコード}
+  \subtitles<3>{Scala.js の中間表現 (IR)}
 
   \begin{block}{Scala Source Code}
     \begin{lstlisting}[gobble=6]
@@ -522,12 +562,16 @@ terminal
     \end{lstlisting}
     % $ fix syntax highlighting
   \end{block}
+  \vspace{-2\baselineskip}
 
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Scala.js Compiler -- \texttt{jscode}}
   \framesubtitle{Method Exports}
+
+  \subtitles<1>{メソッドのエクスポート \subsep jsinterop フェーズを通した後の Scala コード}
+  \subtitles<2>{Scala.js の中間表現 (IR)}
 
   \begin{block}{Scala Code after \texttt{jsinterop}}
     \begin{lstlisting}[gobble=6]
@@ -562,6 +606,12 @@ terminal
   % Overlays are used in later inclusions of this frame
 
   \frametitle{Phases of the Scala.js Linker}
+
+  \subtitles<1-3>{Scala.js のリンカフェーズ}
+
+  % TODO translation: "purification" might be not most appropriate here
+  \subtitles<4>{精製フェーズ}
+  \subtitles<5>{出力フェーズ}
 
   \begin{center}
     \begin{tikzpicture}[->,thick,
@@ -612,6 +662,8 @@ terminal
   \frametitle{Scala.js Linker -- Linker Phase}
   \framesubtitle{Alive Code Inclusion}
 
+  \subtitles{実行パスにあるコードのみ取り込む}
+
   % Using semiverbatim because too many overlay interactions
   \begin{semiverbatim} \small
 \uncover<2->{@JSExport}
@@ -636,6 +688,8 @@ terminal
 
 \begin{frame}[fragile]
   \frametitle{Scala.js Linker -- Optimizer Phase}
+
+  \subtitles{最適化フェーズ}
 
   \begin{overprint}
     \onslide<1,3->
@@ -691,6 +745,9 @@ terminal
   \frametitle{Scala.js Linker -- Emitter Phase}
   \framesubtitle{Desugaring}
 
+  \subtitles<1>{糖衣構文の展開}
+  \subtitles<2->{疑似 JavaScript コード}
+
   \begin{columns}[t]
     \column{.5\textwidth}
     \begin{block}{Scala Code\phantom{p}}
@@ -729,10 +786,12 @@ terminal
 
 \end{frame}
 
-\againframe<6>{scalajsld}
+\againframe<1>{scalajsld}
 
 \begin{frame}[fragile]
   \frametitle{Final JavaScript (simplified)}
+
+  \subtitles{最終的に出力される JavaScript コード}
 
   \begin{lstlisting}[language=javascript]
 /** @constructor */
@@ -763,6 +822,9 @@ HelloFactory.prototype.hello__I__T = function(x) {
 
 \begin{frame}
   \frametitle{Things I Shamelessly Omitted}
+
+  % TODO translation: can / should we include "shameless"?
+  \subtitles{省略した話題}
 
   \begin{columns}[t]
     \column{.5\textwidth}
@@ -810,9 +872,11 @@ HelloFactory.prototype.hello__I__T = function(x) {
 \begin{frame}
   \frametitle{Questions}
 
+  \nosubtitles
+
   \vspace{4\baselineskip}
 
-  {\Huge ¿Questions?}
+  {\Huge Questions?}
 
   \vspace{4\baselineskip}
 
