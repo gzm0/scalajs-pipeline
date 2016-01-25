@@ -227,7 +227,7 @@ commentstyle=\color{scComment},
 
       % Linker and JS file
       \node (scalajsld) at (9,2.75) {\scalajsld};
-      \node (js) at (12,2.75) {\jsFile};
+      \node<1-6,8> (js) at (12,2.75) {\jsFile};
 
       \draw<-4> (sjsir1) -- (scalajsld);
       \draw<5-> (jar1) -- (scalajsld);
@@ -235,7 +235,7 @@ commentstyle=\color{scComment},
       \draw<-4> (sjsir2) -- (scalajsld);
       \draw<5,8> (jar2) -- (scalajsld);
 
-      \draw (scalajsld) -- (js);
+      \draw<1-6,8> (scalajsld) -- (js);
 
       % Compilation symbols
       \draw<2>[dashed] (sjsir2) -- (scalajsc1);
